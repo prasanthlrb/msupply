@@ -11,7 +11,7 @@
 |
 */
 use App\product;
-//Route::get('/order-email','AccountController@orderMail');
+//Route::get('/order-email','accountController@orderMail');
 Route::get('/order-email',function(){
     return view('email.test');
 });
@@ -73,11 +73,11 @@ Route::get('/set-cart-item','cartController@getCartItem');
 //Route::get('/wishlist','pageController@wishlist');
 // Route::get('/add-wishlist/{id}','pageController@addWishlist');
 // Route::get('/remove-wish/{id}','pageController@removewish');
-Route::get('/transports','AccountController@transport');
-Route::get('/own-transport','AccountController@ownTransport');
-Route::get('//edit-transport','AccountController@editTransport');
+Route::get('/transports','accountController@transport');
+Route::get('/own-transport','accountController@ownTransport');
+Route::get('//edit-transport','accountController@editTransport');
 Route::get('/get-transport-data/{id}','pageController@getTransportData');
-Route::get('/removewish/{id}','AccountController@removewish');
+Route::get('/removewish/{id}','accountController@removewish');
 Route::get('/filter-brand/{id}','categoryController@filterBrand');
 //product search
 Route::post('/filter','pageController@filter');
@@ -376,55 +376,55 @@ Route::get('/update-amount','productController@updateAmount');
 });
 
 Auth::routes();
-Route::get('/add-wishlist/{id}','AccountController@addWishlist');
-Route::get('/removewish/{id}','AccountController@removewish');
+Route::get('/add-wishlist/{id}','accountController@addWishlist');
+Route::get('/removewish/{id}','accountController@removewish');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'account'],function( ){
-    Route::get('/review','AccountController@review');
-    Route::get('/dashboard','AccountController@dashboard')->middleware('utype');
-    Route::get('/wishlist','AccountController@wishlist');
-    Route::get('/address','AccountController@address')->middleware('utype');
-    Route::get('/orders','AccountController@orders')->middleware('utype');
-    Route::get('/editCustomer/{id}','AccountController@editCustomer')->middleware('utype');
-    Route::get('/edit-shipping/{id}','AccountController@editShipping')->middleware('utype');
-    Route::get('/edit-billing/{id}','AccountController@editBilling')->middleware('utype');
-    Route::post('/updateCustomer','AccountController@updateCustomer')->middleware('utype');
-    Route::post('/userchangePassword','AccountController@userchangePassword')->middleware('utype');
-    Route::post('/updateAddress','AccountController@updateAddress')->middleware('utype');
-    Route::get('/vieworders/{id}','AccountController@vieworders')->middleware('utype');
-    Route::get('/company','AccountController@company');
-    Route::get('/company-verify','AccountController@companyVerify');
+    Route::get('/review','accountController@review');
+    Route::get('/dashboard','accountController@dashboard')->middleware('utype');
+    Route::get('/wishlist','accountController@wishlist');
+    Route::get('/address','accountController@address')->middleware('utype');
+    Route::get('/orders','accountController@orders')->middleware('utype');
+    Route::get('/editCustomer/{id}','accountController@editCustomer')->middleware('utype');
+    Route::get('/edit-shipping/{id}','accountController@editShipping')->middleware('utype');
+    Route::get('/edit-billing/{id}','accountController@editBilling')->middleware('utype');
+    Route::post('/updateCustomer','accountController@updateCustomer')->middleware('utype');
+    Route::post('/userchangePassword','accountController@userchangePassword')->middleware('utype');
+    Route::post('/updateAddress','accountController@updateAddress')->middleware('utype');
+    Route::get('/vieworders/{id}','accountController@vieworders')->middleware('utype');
+    Route::get('/company','accountController@company');
+    Route::get('/company-verify','accountController@companyVerify');
 
     //COD Checkout Verification
-    Route::get('/verify-order-sms','AccountController@verifyOrder');
+    Route::get('/verify-order-sms','accountController@verifyOrder');
 
 
     //change Customer Account info
-    Route::post('/change-account-info','AccountController@changeAccountInfo');
-    Route::post('/change-account-info','AccountController@changeAccountInfo');
-    Route::post('/update-billing','AccountController@updateBilling');
-    Route::post('/update-shipping','AccountController@updateShipping');
+    Route::post('/change-account-info','accountController@changeAccountInfo');
+    Route::post('/change-account-info','accountController@changeAccountInfo');
+    Route::post('/update-billing','accountController@updateBilling');
+    Route::post('/update-shipping','accountController@updateShipping');
 
-    Route::get('/delete-shipping/{id}','AccountController@deleteShipping');
-    Route::get('/delete-billing/{id}','AccountController@deleteBilling');
+    Route::get('/delete-shipping/{id}','accountController@deleteShipping');
+    Route::get('/delete-billing/{id}','accountController@deleteBilling');
 
-    Route::get('/add-review','AccountController@addReview');
-    Route::get('/re-review','AccountController@reReview');
+    Route::get('/add-review','accountController@addReview');
+    Route::get('/re-review','accountController@reReview');
 
-Route::get('/shipping', 'AccountController@accShipping');
-Route::get('/billing', 'AccountController@accBilling');
-Route::post('createShipping', 'AccountController@accCreateShipping');
-Route::post('createBilling', 'AccountController@accCreateBilling');
+Route::get('/shipping', 'accountController@accShipping');
+Route::get('/billing', 'accountController@accBilling');
+Route::post('createShipping', 'accountController@accCreateShipping');
+Route::post('createBilling', 'accountController@accCreateBilling');
 
 //order Cancel
-Route::get('order-cancel/{id}', 'AccountController@orderCancel');
+Route::get('order-cancel/{id}', 'accountController@orderCancel');
 //order Print
-Route::get('order-print/{id}', 'AccountController@orderPrint');
+Route::get('order-print/{id}', 'accountController@orderPrint');
 
 //deals
-Route::get('deals','AccountController@deals');
+Route::get('deals','accountController@deals');
 });
-Route::post('/submit-company','AccountController@submitCompany')->name('submit.company');
+Route::post('/submit-company','accountController@submitCompany')->name('submit.company');
 Route::get('/get-compare','pageController@compare');
 Route::get('/add-compare/{id}','pageController@addCompare');
 Route::get('/remove-compare/{id}','pageController@removeCompare');
@@ -493,13 +493,13 @@ Route::get('/cart-menu','cartController@cartMenu');
 Route::get('/cart-data', 'cartController@cartData');
 
 
-Route::get('/checkout', 'AccountController@checkout');
-Route::get('/shipping', 'AccountController@shipping');
-Route::get('/billing', 'AccountController@billing');
-Route::post('createShipping', 'AccountController@createShipping');
-Route::post('createBilling', 'AccountController@createBilling');
+Route::get('/checkout', 'accountController@checkout');
+Route::get('/shipping', 'accountController@shipping');
+Route::get('/billing', 'accountController@billing');
+Route::post('createShipping', 'accountController@createShipping');
+Route::post('createBilling', 'accountController@createBilling');
 Route::get('menu-data', 'pageController@menuData');
-Route::get('order-placed/{id}/{ship}/{bill}', 'AccountController@orderPlaced');
+Route::get('order-placed/{id}/{ship}/{bill}', 'accountController@orderPlaced');
 
 //location
 Route::get('/get-location-page', function(){
