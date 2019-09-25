@@ -25,86 +25,6 @@
 						<table class="table_type_1 compare">
 
 							<tbody>
-								@if($product[0]->category == 1)
-								<tr>
-									
-									<th class="row_title_col">Product Image</th>
-									@foreach($product as $row)
-									<td>
-										<a href="#"><img src="http://www.kagtech.net/KAGAPP/Partsupload/{{$row->product_image}}" alt=""></a>
-									</td>
-									@endforeach
-
-								</tr>
-
-								<tr>
-									
-									<th class="row_title_col">Product Name</th>
-									@foreach($product as $row)
-									<td>
-
-										<a href="/product/{{$row->id}}">{{$row->product_name}}</a>
-
-									</td>
-									@endforeach
-								</tr>
-
-								
-
-								<tr>
-									
-									<th class="row_title_col">Price</th>
-										@foreach($product as $row)
-									<td class="total">{{$row->sales_price}}</td>
-										@endforeach
-
-								</tr>
-
-								<tr>
-									
-									<th class="row_title_col">Size</th>
-								@foreach($product as $row)
-									
-                            <td>{{$row->width}}</td>
-								
-								@endforeach
-
-								</tr>
-
-
-								<tr>
-									
-									<th class="row_title_col">Total Coverage in Sqft</th>
-									@foreach($product as $row)
-							
-                                        <td>{{$row->length}}</td>
-									@endforeach
-
-								</tr>
-
-
-								<tr>
-									
-									<th class="row_title_col">Weight</th>
-									@foreach($product as $row)
-									<td>{{$row->weight}}kg</td>
-
-									@endforeach
-								</tr>
-
-								<tr>
-									
-									<th class="row_title_col">No of Pieces</th>
-
-									@foreach($product as $row)
-
-									<td>{{$row->items}}</td>
-									@endforeach
-
-								</tr>
-
-
-								@else
 
 								<tr>
 									
@@ -112,11 +32,8 @@
 									@foreach($product as $row)
 									<td>
 										
-
 										<a href="#"><img src="/product_img/{{$row->product_image}}" alt=""></a>
 
-										
-
 									</td>
 									@endforeach
 
@@ -134,79 +51,72 @@
 									@endforeach
 								</tr>
 
+								
+
 
 								<tr>
 									
-									<th class="row_title_col">Price</th>
-										@foreach($product as $row)
-									<td class="total">{{$row->sales_price}}</td>
-										@endforeach
-
+									<th>Finishes </th>
+									@foreach($product as $row)
+									@foreach($pg as $p_g)
+									@if($row->id == $p_g->product_id)
+									<td>{{$p_g->finishers}}</td>
+									@endif
+									@endforeach
+									@endforeach
+								</tr>
+								<tr>
+									
+									<th>Coverage </th>
+									@foreach($product as $row)
+									@foreach($pg as $p_g)
+									@if($row->id == $p_g->product_id)
+									<td>{{$p_g->coverage}}</td>
+									@endif
+									@endforeach
+									@endforeach
+								</tr>
+								<tr>
+									
+									<th>Drying Time</th>
+									@foreach($product as $row)
+									@foreach($pg as $p_g)
+									@if($row->id == $p_g->product_id)
+									<td>{{$p_g->drying}}</td>
+									@endif
+									@endforeach
+									@endforeach
+								</tr>
+								<tr>
+									
+									<th>Coating </th>
+									@foreach($product as $row)
+									@foreach($pg as $p_g)
+									@if($row->id == $p_g->product_id)
+									<td>{{$p_g->coating}} </td>
+									@endif
+									@endforeach
+									@endforeach
 								</tr>
 
 								<tr>
 									
-									<th class="row_title_col">Description</th>
-								@foreach($product as $row)
+									<th>Available Litreage </th>
+									@foreach($product as $row)
+									
 									<td>
-										
-										<?php 
-                  
-                  echo html_entity_decode($row->product_description);
-                  ?>
-
-									</td>
-								@endforeach
-
-								</tr>
-
-
-								<tr>
+									@foreach($pl as $p_l)
+									@if($row->id == $p_l->product_id)
 									
-									<th class="row_title_col">Availability</th>
-									@foreach($product as $row)
-							
-
-									@if($row->stock_quantity !="")
-                                          
-                                            <td><span class="in_stock">in stock</span> {{$row->stock_quantity}} item(s)</td>
-                                        @else    
-        
-                                            <td><span style="color:red;">Out of Stock</span></td>
-                                        @endif
+										{{$p_l->paint_lit}} 
+										<?php echo $p_l->paint_lit == 500 ? "ml" :"lit" ?>
+									
+									@endif
 									@endforeach
-
-								</tr>
-
-								<tr>
-									
-									<th class="row_title_col">SKU</th>
-									@foreach($product as $row)
-									<td>{{$row->sku}}</td>
-									@endforeach
-
-								</tr>
-
-								<tr>
-									
-									<th class="row_title_col">Weight</th>
-									@foreach($product as $row)
-									<td>{{$row->weight}}kg</td>
-
+								</td>
 									@endforeach
 								</tr>
 
-								<tr>
-									
-									<th class="row_title_col">Dimensions<br>(L x W x H)</th>
-
-									@foreach($product as $row)
-
-									<td>{{$row->length}}x{{$row->width}}x{{$row->height}} Cm</td>
-									@endforeach
-
-								</tr>
-								@endif
 
 								<tr>
 									

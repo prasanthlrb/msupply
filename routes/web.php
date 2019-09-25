@@ -428,20 +428,7 @@ Route::post('/submit-company','accountController@submitCompany')->name('submit.c
 Route::get('/get-compare','pageController@compare');
 Route::get('/add-compare/{id}','pageController@addCompare');
 Route::get('/remove-compare/{id}','pageController@removeCompare');
-Route::get('/compare',function(){
-    if(Session::has('compare')){
-
-        $product = product::whereIn('id',Session::get('compare'))->get();
-        if($product[0]->sub_category != null){
-            $related = product::where('sub_category',$product[0]->sub_category)->take(10)->get();
-        }else{
-             $related = product::where('category',$product[0]->category)->take(10)->get();
-        }
-    }else{
-        $product= [];
-    }
-    return view('compare',compact('product','related'));
-});
+Route::get('/compare','pageController@viewCompare');
 
 //Cart Management
 Route::get('/add-cart/{id}/{qty}','pageController@addToCart');

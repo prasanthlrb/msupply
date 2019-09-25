@@ -27,6 +27,7 @@ use App\color_category;
 use App\paint_price;
 use App\tiles_stock_location;
 use App\paint_lit;
+use App\painting_guides;
 class pageController extends Controller
 {
     public function __construct()
@@ -75,7 +76,8 @@ class pageController extends Controller
         try {
             $slider = homeSlider::orderBy('position', 'ASC')->get();
             $layouts = home_product_layout::orderBy('position', 'ASC')->get();
-            $category = category::all();
+            
+            // $category = category::all();
             $product = product::all();
             $adModel = adModel::all();
             if(Session::get('locations') == 'Madurai'){
@@ -86,58 +88,60 @@ class pageController extends Controller
             }
                
             $output = '';
+            $layout_collection[]='';
+
+            //start tab button
             foreach ($layouts as $layout) {
                 if ($layout->type == 'category') {
-                    foreach (explode(',', $layout->category_id) as $row) {
-                        $layout_collection[] = $row;
-                    }
-                    $layout->category_id = $layout_collection;
-
                     $output .= '	<section class="section_offset animated transparent" data-animation="fadeInDown">';
                     $xcount = 1;
                     $output .= '<h3>' . $layout->title . '</h3>
             <div class="tabs type_2 products">
             <ul class="tabs_nav clearfix">';
-                    foreach ($category as $cat) {
-                        if (in_array($cat->id, $layout_collection)) {
-                            $output .= '<li><a href="#tab-' . $xcount . '">' . $cat->category_name . '</a></li>';
+            foreach (explode(',', $layout->category_id) as $row) {
+            $cat = category::find($row);
+                            $output .= '<li><a href="#'.$layout->title.'-' . $xcount . '">' . $cat->category_name . '</a></li>';
                             $xcount++;
-                        }
                     }
 
                     $output .= '</ul>
             <div class="tab_containers_wrap">';
                     $ycount = 1;
-                    foreach ($category as $cat) {
-                        if (in_array($cat->id, $layout_collection)) {
-                            $output .= '<div id="tab-' . $ycount . '" class="tab_container">
+                    //end tab button
+                      
+                    //start tab product data
+                         foreach (explode(',', $layout->category_id) as $row) {
+                             
+                                $cat = category::find($row);
+                            $output .= '<div id="'.$layout->title.'-' . $ycount . '" class="tab_container">
             <div class="owl_carousel carousel_in_tabs">';
+            
                             if($cat->id == 1){
-                                $product_data = $this->tilesLocationBasedData()->where('category',$cat->id)->take(20);
+                                $product_data = $this->tilesLocationBasedData('category',$cat->id);
+                               
                             }else{
-
                                 $product_data = product::where('category',$cat->id)->get();
                             }
-                            if(count($product_data) == 0){
-                                $pro_data = product::where('sub_category',$cat->id)->get();
-                               // return response()->json($pro_data);
+                            if($product_data->count() == 0){
+                               
                                 
-                                if(count($pro_data) < 0){
-                                    if($pro_data[0]->catgory == 1){
-                                        
-                                        $pro_data = $this->tilesLocationBasedData()->where('sub_category',$cat->id)->take(20); 
-                                    }
+                                if($cat->id == 2 || $cat->id == 3){
+                                    
+                                    $product_data = $this->tilesLocationBasedData('sub_category',$cat->id);
+                                    if($product_data->count() == 0){
+                                    $product_data = $this->tilesLocationBasedData('second_sub_category',$cat->id);
                                 }
-                                if(count($pro_data) < 0){
-                                    $pro_data = $this->tilesLocationBasedData()->where('second_sub_category',$cat->id)->take(20);
+
+                                }else{
+                                    $product_data = product::where('sub_category',$cat->id)->get();
                                 }
-                                $product_data = $pro_data;
+                                
                             }
              
-            //$product_data = product::where('category', 'LIKE', "%{$cat->id}%")->take(20);
-
-                          
-                            foreach ($product_data->take(20) as $row) {
+                            
+                       if($product_data->count()>0){
+                           if($product_data[0]->group_product == null){
+                            foreach ($product_data as $row) {
                                 $output .= '
             <div class="product_item type_2">
             <div class="image_wrap">';
@@ -147,86 +151,132 @@ class pageController extends Controller
                 $output .='<img src="' . asset('product_img/' . $row->product_image . '') . '" alt="">';
             }
             $output .=' <div class="actions_wrap">
-            <div class="centered_buttons">
-            <a href="#" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view/' . $row->id . '">Quick View</a>
+            <div class="centered_buttons">';
+            if($row->category == 1){
+                $output .='
+            <a href="javascript:void(null)" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view-tiles/' . $row->id . '">Quick View</a>';
+            }else if($row->category == 21){
+                $output .='
+            <a href="javascript:void(null)" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-model-paint/' . $row->id . '">Quick View</a>';
+            }else if($row->category == 7){}else{
+
+                $output .='
+                <a href="javascript:void(null)" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view/' . $row->id . '">Quick View</a>';
+            }
+            $output.='
             </div>
             </div>
             </div>
-            <div class="label_hot">Hot</div>
+            
             <div class="description">
             <a href="/product/' . $row->id . '">' . $row->product_name . '</a>
             <div class="clearfix product_info">';
 
-            $getRating = rating::where('item_id',$row->id)->get();
-            $rating_count=0;
-            if(count($getRating) > 0){
-            $total=0;
-            foreach($getRating as $rows){
-                $total +=$rows->rating;
-            }
-            $rating_count = $total/count($getRating);
+            // $getRating = rating::where('item_id',$row->id)->get();
+            // $rating_count=0;
+            // if(count($getRating) > 0){
+            // $total=0;
+            // foreach($getRating as $rows){
+            //     $total +=$rows->rating;
+            // }
+            // $rating_count = $total/count($getRating);
 
-                $output .= '<ul class="rating alignright">
+            //     $output .= '<ul class="rating alignright">
 
-                            <li class="active"></li>
+            //                 <li class="active"></li>
 
-                            <li class="';
-                            if($rating_count >= 2){
+            //                 <li class="';
+            //                 if($rating_count >= 2){
 
-                                $output .= 'active';
-                            }
-                            $output .= '"></li>
+            //                     $output .= 'active';
+            //                 }
+            //                 $output .= '"></li>
 
-                            <li class="';
-                            if($rating_count >= 3){
+            //                 <li class="';
+            //                 if($rating_count >= 3){
 
-                                $output .= 'active';
-                            }
-                            $output .= '"></li>
+            //                     $output .= 'active';
+            //                 }
+            //                 $output .= '"></li>
 
-                            <li class="';
-                            if($rating_count >= 4){
+            //                 <li class="';
+            //                 if($rating_count >= 4){
 
-                                $output .= 'active';
-                            }
-                            $output .= '"></li>
+            //                     $output .= 'active';
+            //                 }
+            //                 $output .= '"></li>
 
-                            <li class="';
-                            if($rating_count >= 5){
+            //                 <li class="';
+            //                 if($rating_count >= 5){
 
-                                $output .= 'active';
-                            }
-                            $output .= '"></li>
+            //                     $output .= 'active';
+            //                 }
+            //                 $output .= '"></li>
 
 
-                        </ul>';
+            //             </ul>';
 
-            }
+            // }
                         $output .= '<p class="product_price alignleft">';
                                 if($row->category != 7 && $row->category != 21){
-                                if ($row->sales_price != null) {
+                                if ($row->regular_price != null) {
                                     $output .= ' <s>₹ ' . $row->regular_price . '</s>
                         <b>₹ ' . $row->sales_price . '</b></p>';
                                 } else {
-                                    $output .= '<b>₹ ' . $row->regular_price . '</b></p>';
+                                    $output .= '<b>₹ ' . $row->sales_price . '</b></p>';
                                 }
                             }
                                 $output .= '
             </div>
             </div>
             <div class="buttons_row">
-            <a href="/product/' . $row->id . '" class="button_blue middle_btn">See Product Details</a>
-			<button class="button_dark_grey middle_btn def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button>
+            <a href="/product/' . $row->id . '" class="button_blue middle_btn">See Details</a>
+			<button onclick="addWishlist('.$row->id.')" class="button_dark_grey middle_btn def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button>
+			<a href="javascript:void(null)" onclick="addCompare('.$row->id.')" class="button_dark_grey middle_btn def_icon_btn add_to_compare tooltip_container"><span class="tooltip top">Add to Compare</span></a>
 
             </div></div>';
                             }
+                        }else{
+
+                            $group_product = product::where('category',$cat->id)->select('brand_name')->groupBy('brand_name')->get();
+                            if($group_product->count()>0){
+                                foreach($group_product as $brands){
+                                    $brand = brand::find($brands->brand_name);
+                                    //return response()->json($brand->brand);
+                                    $output .= '
+            <div class="product_item type_2">
+            <div class="image_wrap">';
+            
+                $output .='<img src="'.asset('upload_brand/'.$brand->brand_image.'').'" alt="">';
+          
+            $output .=' <div class="actions_wrap">
+          
+            </div>
+            </div>
+            
+            <div class="description">
+            <a href="/steel-product/' . $brand->id . '">' . $brand->brand . '</a>
+            <div class="clearfix product_info">';
+
+$output .= '
+            </div>
+            </div>
+            <div class="buttons_row">
+            <a href="/steel-product/'. $brand->id . '" class="button_blue middle_btn">See Product Details</a>
+			
+            </div></div>';
+                                }
+                            }
+                            //
+                        }
+                    }
                             $output .= '</div>
             <footer class="bottom_box">
-            <a href="#" class="button_grey middle_btn">View All Products</a>
+            <a href="/category/'.$cat->id.'" class="button_grey middle_btn">View All Products</a>
             </footer></div>';
                             $ycount++;
                         }
-                    }
+                    
 
                     $output .= '</div>
 				</div>
@@ -346,8 +396,8 @@ class pageController extends Controller
             // ->orderBy('stock_quantity','DESC')
             // ->take(20)
             // ->get();
-            $floor = $this->tilesLocationBasedData()->where('sub_category',3)->take(20);
-            $wall = $this->tilesLocationBasedData()->where('sub_category',2)->take(20);
+            // $floor = $this->tilesLocationBasedData('sub_category',3);
+            // $wall = $this->tilesLocationBasedData('sub_category',2);
             //return response()->json($datas);
             $paint = product::where('category',21)->get();
             if(count($product_today) > 0){
@@ -372,7 +422,7 @@ class pageController extends Controller
             }
         }
         
-            return view('home', compact('slider', 'layouts', 'output', 'product_today', 'adModel','floor','wall','paint'));
+            return view('home', compact('slider', 'layouts', 'output', 'product_today', 'adModel','paint'));
 
             //  foreach($product_today as $row){
             //     return response()->json($row);
@@ -473,12 +523,13 @@ class pageController extends Controller
                      <p>' . $product->product_description . '</p>
                  </div>
                  <hr>';
+                 if($product->category != 7){
         if ($product->regular_price != "") {
             $output .= ' <p class="product_price"><s>₹' . $product->regular_price . '</s> <b class="theme_color">₹' . $product->sales_price . '</b></p>';
         } else {
             $output .= ' <p class="product_price"><b class="theme_color">₹' . $product->sales_price . '</b></p>';
         }
-
+    }
         $output .= '<form method="post" id="termsData">' . csrf_field() . '
      ';
 
@@ -550,20 +601,7 @@ class pageController extends Controller
                  <div class="description_section v_centered">
                  </div>
 
-                 <div class="description_section">
-                       <table class="product_info">
-                             <tbody>
-                                   <tr>
-                                         <td>Availability: </td>
-                             ';
-        if ($product->stock_quantity != "") {
-            $output .= '<td><span class="in_stock">in stock</span> ' . $product->stock_quantity . ' item(s)</td>';
-        } else {
-            $output .= '<td><span style="color:red;">Out of Stock</span></td>';
-        }
-        $output .='</tr></tbody>
-                       </table>
-                 </div>';
+               ';
        
         if ($product->regular_price != "") {
             $output .= ' <p class="product_price"><s>₹' . $product->regular_price . '</s> <b class="theme_color">₹' . $product->sales_price . '</b></p>';
@@ -719,7 +757,7 @@ class pageController extends Controller
     public function addCompare($id)
     {
         $pAlready = 0;
-        if (Session::has('compare')) {
+        if (Session::has('compare') && count(Session::get('compare')) >0) {
             if (!in_array($id, Session::get('compare'))) {
                 $pro1 = product::find($id);
                 $pro2 = product::find(Session::get('compare')[0]);
@@ -969,9 +1007,6 @@ class pageController extends Controller
    // return response()->json($totalQty);
     }
     public function colorModals($id){
-        //
-
-
         $color_ids = collect(DB::table('paint_prices')->select('colors_id')->where('product_id',$id)->groupBy('colors_id')->orderBy('colors_id','asc')->get());
             
             foreach($color_ids as $ids){
@@ -1106,7 +1141,8 @@ class pageController extends Controller
         Session::put('locations', $data);
         return response()->json(Session::get('locations'));
     }
-    public function tilesLocationBasedData(){
+    public function tilesLocationBasedData($where,$where_value){
+       // return response()->json($where,$where_value);
         $location = Session::get('locations');
         //$location = 'Salem';
         $data = array(
@@ -1145,12 +1181,14 @@ class pageController extends Controller
         );
       
             $stock = DB::table('tiles_stock_locations as tsl')
-                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type'))
+                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type,p.group_product,p.category,p.id,p.regular_price,p.sales_price'))
                     ->whereIn('tsl.location', $data[$location])
                     ->where('p.sales_price','!=',null)
+                    ->where($where,$where_value)
                     ->join('products as p','p.id','=','tsl.product_id')
                     ->groupBy('tsl.product_id')
                     ->orderBy('stocks','desc')
+                    ->take(20)
                     ->get();
                      if(count($stock)>0){
                  foreach($stock as $row){
@@ -1176,5 +1214,26 @@ class pageController extends Controller
             //$stock = tiles_stock_location::whereIn('location',$data[$location])->get();
         
         return $stock;
+    }
+
+    public function viewCompare(){
+        if(Session::has('compare') && count(Session::get('compare')) >0){
+        $product = product::whereIn('id',Session::get('compare'))->get();
+        if($product[0]->category == 21){
+            $pg = painting_guides::whereIn('product_id',Session::get('compare'))->get();
+            $pl = paint_lit::whereIn('product_id',Session::get('compare'))->get();
+            return view('compare_paint',compact('product','pg','pl'));
+        }
+        if($product[0]->sub_category != null){
+            $related = product::where('sub_category',$product[0]->sub_category)->where('sales_price','!=',null)->take(10)->get();
+        }else{
+             $related = product::where('category',$product[0]->category)->where('sales_price','!=',null)->take(10)->get();
+        }
+    }else{
+        $product= [];
+        $related =[];
+    }
+   
+    return view('compare',compact('product','related'));
     }
 }
