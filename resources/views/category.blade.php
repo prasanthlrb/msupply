@@ -85,7 +85,7 @@
 
                 <!-- - - - - - - - - - - - - - Tags - - - - - - - - - - - - - - - - -->
 
-                <section class="section_offset">
+                {{-- <section class="section_offset">
 
                     <h3>Brand</h3>
 
@@ -101,7 +101,7 @@
                         
                     </div>
 
-                </section>
+                </section> --}}
 
             
 
@@ -228,21 +228,18 @@
 
                             <!-- - - - - - - - - - - - - - Sort by - - - - - - - - - - - - - - - - -->
 
+                       
                             <div class="v_centered">
 
                                 <span>Sort by:</span>
 
-                                <div class="custom_select sort_select">
-                                    
-                                    <select name="">
-                                            
-                                        <option value="Default">Default</option>
-                                        <option value="Price">Price</option>
-                                        <option value="Name">Name</option>
-                                        <option value="Date">Date</option>
-
-                                    </select>
-
+                                <div class="sort_select">
+                                    <input type="hidden" id="urlPath" value="{{ Request::segment(2) }}">
+    <select class="form-control" name="sorter" id="sorter" style="height:35px">
+    <option disabled <?php echo Request::segment(3) == null ? 'selected' : ''?>>Default</option>
+   <option value="1" <?php echo Request::segment(3) == 1 ? 'selected' : ''?>>Low to High</option>
+    <option value="2" <?php echo Request::segment(3) == 2 ? 'selected' : ''?>>High to Low</option>
+  </select>
                                 </div>
 
                             </div>
@@ -309,33 +306,54 @@
                                                 @if($product1->category == 1)
                                                 
                                                 <a href="#" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view-tiles/{{$product1->id}}">Quick View</a>
+                                                
+                                                @elseif($product1->category == 21)
+                                                
+                                                <a href="#" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-model-paint/{{$product1->id}}">Quick View</a>
                                                 @else
                                                 
                                                 <a href="#" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view/{{$product1->id}}">Quick View</a>
                                                 @endif
 
-                                                <!-- <a href="#" class="button_blue middle_btn add_to_cart">Add to Cart</a> -->
-                                                <!-- <button onclick="addCart({{$product1->id}})" class="button_blue middle_btn add_to_cart">Add to Cart</button> -->
+                                               
 
                                             </div>
 
-                                            <a href="/add-wishlist/{{$product1->id}}" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
+                                            <a href="javascript:void(null)" onclick="addWishlist({{$product1->id}})" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
 
-                                            <a href="/compare-product/{{$product1->id}}" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
+                                            <a href="javascript:void(null)" onclick="addCompare({{$product1->id}})" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
 
                                         </div>
 
                                     </div>
+                                    		@if($product1->regular_price != null && $product1->category != 7)
+
+												<div class="label_offer percentage">
+													<?php $v1 = $product1->regular_price - $product1->sales_price;
+													$v2 = ceil($v1/$product1->regular_price*100); ?>
+													<div>{{$v2}}%</div>OFF
+		
+												</div>
+												@endif
 
                                     <div class="description">
 
                                         <a href="/product/{{$product1->id}}">{{$product1->product_name}}</a>
 
                                         <div class="clearfix product_info">
-                                            @if($product1->category != 21)
-                                            <p class="product_price alignleft"><b>₹{{$product1->sales_price}}</b></p>
+                                            @if($product1->category != 21 && $product1->category != 7)
+                                            <p class="product_price alignleft">
+                                                
+                                                	@if($product1->regular_price != null)
+															<s>₹ {{$product1->regular_price}}</s> 
+															<b>₹ {{$product1->sales_price}}</b>
+															@else
+															<b>₹ {{$product1->sales_price}}</b>
+																@endif
+                                            
+                                            </p>
                                             @endif
-                                            <?php 
+                                            <?/*php 
                                             $getRating = App\rating::where('item_id',$product1->id)->get();
                                             if(count($getRating) > 0){
                                                 $rating_count;
@@ -349,18 +367,18 @@
                                                
                 
                 
-                                                ?>
-                                                @if(count($getRating) > 0)
+                                                */?>
+                                                {{-- @if(count($getRating) > 0)
                                                     <ul class="rating alignright">
                 
                                                             <li class="active"></li>
-                                                            <li class="<?php echo $rating_count >= 2 ? 'active' : '' ?>"></li>
-                                                            <li class="<?php echo $rating_count >= 3 ? 'active' : '' ?>"></li>
-                                                            <li class="<?php echo $rating_count >= 4 ? 'active' : '' ?>"></li>
-                                                            <li class="<?php echo $rating_count >= 5 ? 'active' : '' ?>"></li>
+                                                            <li class="{{ $rating_count >= 2 ? 'active' : '' }}"></li>
+                                                            <li class="{{ $rating_count >= 3 ? 'active' : '' }}"></li>
+                                                            <li class="{{ $rating_count >= 4 ? 'active' : '' }}"></li>
+                                                            <li class="{{ $rating_count >= 5 ? 'active' : '' }}"></li>
                 
                                                         </ul>
-                                                        @endif
+                                                        @endif --}}
 
                                         </div>
 
@@ -403,7 +421,15 @@
 
                                     <div class="actions">
 
-                                        <p class="product_price bold">₹{{$product1->sales_price}}</p>
+                                        <p class="product_price bold">
+                                         	@if($product1->regular_price != null)
+															<s>₹ {{$product1->regular_price}}</s> 
+															<b>₹ {{$product1->sales_price}}</b>
+															@else
+															<b>₹ {{$product1->sales_price}}</b>
+																@endif
+                                        
+                                        </p>
 
                                         <ul class="seller_stats">
 

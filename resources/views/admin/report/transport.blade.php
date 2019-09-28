@@ -126,7 +126,7 @@ $('#customer_type').change(()=>{
    var customer_type = $('#customer_type').val();
 
     $.ajax({
-            url:"{{ route('report.getOrderCustomer')}}",
+            url:"/admin/report/get-order-customer",
             method:"get",
             data:{customer_type:customer_type},
             success:function(data){

@@ -288,7 +288,7 @@
               qtyBox(pro.id)
         }
         function qtyBox(id){
-            var qty = $('#qtybox'+id).val();
+            var qty = Math.ceil($('#qtybox'+id).val());
             var totalAmount=0;
              for(let i =0;i<bulkItems.length;i++){
               if(bulkItems[i].product_id == id){
@@ -314,34 +314,34 @@
              //console.log(bulkItems)
         }
 
-        // function noofkg(data){
-        //     let kg = $('#noofkg'+data.id).val();
-        //     $('#noofrods'+data.id).val('');
-        //     $('#noofbundle'+data.id).val('');
-        //     let rods = Math.ceil(kg / data.weight);
-        //     $('#noofrods'+data.id).val(rods);
-        //     let bundle = Math.ceil(rods / data.items);
-        //     $('#noofbundle'+data.id).val(bundle);
-        // }
+        function noofkg(data){
+            let kg = $('#noofkg'+data.id).val();
+            $('#noofrods'+data.id).val('');
+            $('#noofbundle'+data.id).val('');
+            let rods = Math.ceil(kg / data.weight);
+            $('#noofrods'+data.id).val(rods);
+            let bundle = Math.ceil(rods / data.items);
+            $('#noofbundle'+data.id).val(bundle);
+        }
 
-        // function noofrods(data){
-        //     let rods = $('#noofrods'+data.id).val();
-        //     $('#noofkg'+data.id).val('');
-        //     $('#noofbundle'+data.id).val('');
-        //     let kg = Math.ceil(rods * data.weight);
-        //     $('#noofkg'+data.id).val(kg);
-        //     let bundle = Math.ceil(rods / data.items);
-        //     $('#noofbundle'+data.id).val(bundle);
-        // }
-        // function noofbundle(data){
-        //     let bundle = $('#noofbundle'+data.id).val();
-        //     $('#noofkg'+data.id).val('');
-        //     $('#noofrods'+data.id).val('');
-        //      let rods = Math.ceil(bundle * data.items);
-        //     $('#noofrods'+data.id).val(rods);
-        //     let kg = Math.ceil(rods * data.weight);
-        //     $('#noofkg'+data.id).val(kg);
-        // }
+        function noofrods(data){
+            let rods = $('#noofrods'+data.id).val();
+            $('#noofkg'+data.id).val('');
+            $('#noofbundle'+data.id).val('');
+            let kg = Math.ceil(rods * data.weight);
+            $('#noofkg'+data.id).val(kg);
+            let bundle = Math.ceil(rods / data.items);
+            $('#noofbundle'+data.id).val(bundle);
+        }
+        function noofbundle(data){
+            let bundle = $('#noofbundle'+data.id).val();
+            $('#noofkg'+data.id).val('');
+            $('#noofrods'+data.id).val('');
+             let rods = Math.ceil(bundle * data.items);
+            $('#noofrods'+data.id).val(rods);
+            let kg = Math.ceil(rods * data.weight);
+            $('#noofkg'+data.id).val(kg);
+        }
             $('#steelAddtoCart').on('click', function(){
                  bulkItems = jQuery.grep(bulkItems, function(value) {
       return value.qty != '';

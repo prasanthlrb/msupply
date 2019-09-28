@@ -114,22 +114,6 @@
                 </section> --}}
 
 
-                <section class="section_offset">
-
-                    <h3>Brand</h3>
-
-                    <div class="tags_container">
-
-                        <ul class="tags_cloud">
-                        @foreach($brand as $brand1)    
-                            <li><a href="/filter-brand/{{$brand1->id}}" class="button_grey">{{$brand1->brand}}</a></li>
-                        @endforeach
-                        </ul>
-                        
-                    </div>
-
-                </section>
-
                 
 
 
@@ -144,45 +128,7 @@
                         <div class="left_side clearfix v_centered">
 
 
-                            <div class="v_centered">
 
-                                <span>Sort by:</span>
-
-                                <div class="custom_select sort_select">
-                                    
-                                    <select name="">
-                                            
-                                        <option value="Default">Default</option>
-                                        <option value="Price">Price</option>
-                                        <option value="Name">Name</option>
-                                        <option value="Date">Date</option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="v_centered">
-
-                                <span>Show:</span>
-
-                                <div class="custom_select">
-
-                                    <select name="">
-
-                                        <option value="15">15</option>
-                                        <option value="12">12</option>
-                                        <option value="9">9</option>
-                                        <option value="6">6</option>
-                                        <option value="3">3</option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
 
 
                         </div>
@@ -384,21 +330,7 @@
                                     <li><a href="#"></a></li>
     
                                 </ul> -->
-    @if ($product->lastPage() > 1)
-    <ul class="pags">
-        <li class="{{ ($product->currentPage() == 1) ? ' disabled' : '' }}">
-            <a href="{{ $product->url(1) }}">Previous</a>
-        </li>
-        @for ($i = 1; $i <= $product->lastPage(); $i++)
-            <li class="{{ ($product->currentPage() == $i) ? ' active' : '' }}">
-                <a href="{{ $product->url($i) }}">{{ $i }}</a>
-            </li>
-        @endfor
-        <li class="{{ ($product->currentPage() == $product->lastPage()) ? ' disabled' : '' }}">
-            <a href="{{ $product->url($product->currentPage()+1) }}" >Next</a>
-        </li>
-    </ul>
-    @endif
+
                             </div>
     
                         </footer>

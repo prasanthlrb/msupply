@@ -23,10 +23,10 @@
                 <h1>Terms and Condition</h1>
 
                 <div class="theme_box clearfix">
-                    @if(isset($data[0]->terms))
+                    @if(isset($data->terms))
                     <?php 
                   
-                    echo html_entity_decode($data[0]->terms)?>
+                    echo html_entity_decode($data->terms)?>
                     @endif
                 </div><!--/ .theme_box-->
 

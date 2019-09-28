@@ -104,6 +104,7 @@ class settingController extends Controller
         }
         $data->email = $request->email;
         $data->phone = $request->phone;
+        $data->toll_free = $request->toll_free;
         $data->address = $request->address;
         $data->described = $request->described;
         $data->map1 = $request->map1;

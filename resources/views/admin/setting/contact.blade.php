@@ -38,6 +38,12 @@
                                   <input type="text" id="projectinput2" class="form-control" name="phone" value="{{$data['phone']}}">
                                 </div>
                               </div>
+                              <div class="form-group row">
+                                <label class="col-md-3 label-control" for="projectinput2">Toll Free Number</label>
+                                <div class="col-md-9">
+                                  <input type="text" id="projectinput2" class="form-control" name="toll_free" value="{{$data['toll_free']}}">
+                                </div>
+                              </div>
                              
                               
                               <div class="form-group row">

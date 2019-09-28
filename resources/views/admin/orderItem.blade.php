@@ -191,7 +191,7 @@
 $('#orderStatusChangr').click(function(){
     var orderStatus = $('#orderStatus').val();
     $.ajax({
-            url:"{{ route('orderitem.action')}}",
+            url:"/admin/order-item-action",
             method:"get",
             data:{id:"{{$order->id}}",status:orderStatus},
             success:function(data){

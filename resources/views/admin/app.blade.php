@@ -46,7 +46,7 @@ data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
         <ul class="nav navbar-nav flex-row">
           <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
           <li class="nav-item mr-auto">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
               <img class="brand-logo" alt="Msupply" src="../../images/logoadmin.png">
               <h3 class="brand-text"> Supply</h3>
             </a>
@@ -195,9 +195,6 @@ data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
               @if($role->category == 1)
             <li class="category-menu"><a class="menu-item" href="/admin/category/0">Category</a></li>
             @endif
-            @if($role->catalog == 1)
-            <li class="catalog-menu"><a class="menu-item" href="/admin/viewProduct/">Catalog</a></li>
-            @endif
             @if($role->brand == 1)
             <li class="brand-menu"><a class="menu-item" href="/admin/brand/">Item Brand</a></li>
             @endif
@@ -207,9 +204,12 @@ data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
             @if($role->attribute_set == 1)
             <li class="attributeSet-menu"><a class="menu-item" href="/admin/product-group/">Attributes Set</a></li>
             @endif
-
-            <li class="colors-menu"><a class="menu-item" href="/admin/colors-category/">Colors</a></li>
             <li class="unit-menu"><a class="menu-item" href="/admin/units/">Units</a></li>
+            @if($role->catalog == 1)
+            <li class="catalog-menu"><a class="menu-item" href="/admin/viewProduct/">Catalog</a></li>
+            @endif
+
+            {{-- <li class="colors-menu"><a class="menu-item" href="/admin/colors-category/">Colors</a></li> --}}
           </ul>
         </li>
 
@@ -294,6 +294,7 @@ data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
            <li class="tiles">
               <a class="menu-item" href="/admin/tiles">Tiles</a>
             </li>
+        
          
          </ul>
         </li>

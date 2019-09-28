@@ -133,7 +133,7 @@ $(document).on('click','#orderAction', function(){
     });
     if(order_id.length > 0){
         $.ajax({
-            url:"{{ route('ordertransport.action')}}",
+            url:"/admin/order-transport-action",
             method:"get",
             data:{id:order_id,status:orderStatus},
             success:function(data){

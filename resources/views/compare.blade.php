@@ -55,6 +55,7 @@
 									
 									<th class="row_title_col">Price</th>
 										@foreach($product as $row)
+										
 									<td class="total">{{$row->sales_price}}</td>
 										@endforeach
 
@@ -134,15 +135,23 @@
 									@endforeach
 								</tr>
 
-
 								<tr>
+									
+									<th class="row_title_col">Price</th>
+										@foreach($product as $row)
+			
+									<td class="total">{{$row->sales_price}}</td>
+										@endforeach
+
+								</tr>
+								{{-- <tr>
 									
 									<th class="row_title_col">Price</th>
 										@foreach($product as $row)
 									<td class="total">{{$row->sales_price}}</td>
 										@endforeach
 
-								</tr>
+								</tr> --}}
 
 								<tr>
 									
@@ -216,9 +225,9 @@
 
 										<div class="buttons_row">
 										
-											<a href="/product/{{$row->id}}" class="button_blue middle_btn">See product Page</a>
-
-											<a href="javascript:void(null)" class="button_dark_grey middle_btn def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></a>
+											<a href="/product/{{$row->id}}" class="button_blue middle_btn">View Product</a>
+										
+											<a href="javascript:void(null)" onclick="addWishlist({{$row->id}})" class="button_dark_grey middle_btn def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></a>
 
 											 <a href="/remove-compare/{{$row->id}}" class="button_dark_grey middle_btn icon_btn tooltip_container"><span class="tooltip top">Remove from Compare</span><i class="icon-cancel-2"></i></a>
 
@@ -272,7 +281,7 @@
 
                     </div>
 
-                    <a href="/add-wishlist/{{$r_product->id}}" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
+                    <a href="javascript:void(null)" onclick="addWishlist({{$r_product->id}})" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
 
                     <a href="/compare-product/{{$r_product->id}}" class="button_dark_grey def_icon_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
 
@@ -280,7 +289,7 @@
 
             </div>
 
-            <div class="label_new">New</div>
+            {{-- <div class="label_new">New</div> --}}
 
 
             <div class="description">

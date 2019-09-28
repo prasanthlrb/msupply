@@ -207,6 +207,8 @@ $final=array();
         }
         $product->product_name = $request->product_name;
         $product->sub_category = $request->sub_category;
+        $product->tax_type = $request->tax_type;
+        $product->tax = $request->tax;
         $product->product_description = $request->product_description;
         $product->save();
 
@@ -286,6 +288,8 @@ $final=array();
         $product->product_name = $request->product_name;
         $product->category = 21;
         $product->sub_category = $request->sub_category;
+        $product->tax_type = $request->tax_type;
+        $product->tax = $request->tax;
         $product->product_description = $request->product_description;
         $product->product_image = $imageName;
         $product->save();

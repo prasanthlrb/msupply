@@ -85,7 +85,7 @@
 
                 <!-- - - - - - - - - - - - - - Tags - - - - - - - - - - - - - - - - -->
 
-                <section class="section_offset">
+                {{-- <section class="section_offset">
 
                     <h3>Brand</h3>
 
@@ -101,7 +101,7 @@
                         
                     </div>
 
-                </section>
+                </section> --}}
 
             
 

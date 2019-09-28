@@ -9,6 +9,7 @@ class calculatorController extends Controller
 {
     public function steelCalc($id){
         $product = product::where('brand_name',$id)->get();
+        //return response()->json($product);
         return view('modal.steel',compact('product'));
     }
 

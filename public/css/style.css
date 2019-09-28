@@ -1277,7 +1277,7 @@
 		.search > button:hover{ border-color: #ff4557 !important; }
 
 		.search input{
-			width:calc(100% - 235px);
+			width:calc(100% - 55px);
 			padding:9px 13px;
 			font-size: 16px;
 			border-radius:0px;
@@ -5608,7 +5608,7 @@ transition-duration:0.1s;
 
 	.search_category{ width: 137px; }
 
-	.search input{ width: calc(100% - 187px); }
+	.search input{ width: calc(100% - 55px); }
 
 	#open_shopping_cart{ margin-top:5px; }
 

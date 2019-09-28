@@ -23,10 +23,8 @@
                 <h1>Privacy Policy</h1>
 
                 <div class="theme_box clearfix">
-                    @if(isset($data[0]->payment_terms))
-                    <?php 
-                  
-                    echo html_entity_decode($data[0]->payment_terms)?>
+                    @if(isset($data->payment_terms))
+                <?php echo html_entity_decode($data->payment_terms) ?>
                     @endif
                 </div><!--/ .theme_box-->
 

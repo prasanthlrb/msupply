@@ -153,9 +153,9 @@ p.productdesc{
 
 											<button type="button" class="button_blue middle_btn" id="addToCardPaint" disabled="true">Add to Cart</button>
 
-											<button type="button"  class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button>
+								<button type="button" onclick="addWishlist({{$product1->id}})"  class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button>
 
-											<button type="button"  class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip top">Add to Compare</span></button>
+                                <a href="javascript:void(null)" onclick="addCompare({{$product1->id}})"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip top">Add to Compare</span></button></a>
 
 										</div>
 
@@ -287,9 +287,9 @@ p.productdesc{
 
 												</div><!--/ .centered_buttons -->
 
-												<a href="#" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
+												<a href="javascript:void(null)" onclick="addWishlist({{$relate->id}})" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
 
-												<a href="#" class="button_dark_grey def_icon_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
+                    							<a href="javascript:void(null)" onclick="addCompare({{$relate->id}})" class="button_dark_grey def_icon_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
 
 											</div><!--/ .actions_wrap-->
 											
@@ -584,7 +584,8 @@ if(lit !=0 && colors_id !=0){
 		$('#addToCardPaint').on('click', function(){
 		
 			var formData = new FormData($('#paintFormProduct')[0]);
-			   formData.append("colors_id", code_name);
+			   formData.append("colors_id", colors_id);
+			   formData.append("colors_code", code_name);
 			   formData.append("lit", lit);
 			   formData.append("paint_price", paint_price);
         		$.ajax({

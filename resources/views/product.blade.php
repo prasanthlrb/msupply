@@ -106,7 +106,15 @@
                         <!-- - - - - - - - - - - - - - End of product image column - - - - - - - - - - - - - - - - -->
 
                         <!-- - - - - - - - - - - - - - Product description column - - - - - - - - - - - - - - - - -->
+                                            @if($product1->regular_price != null && $product1->category != 7)
 
+												<div class="label_offer percentage">
+													<?php $v1 = $product1->regular_price - $product1->sales_price;
+													$v2 = ceil($v1/$product1->regular_price*100); ?>
+													<div>{{$v2}}%</div>OFF
+		
+												</div>
+												@endif
                         <div class="single_product_description col-md-7">
 
                             <h3 class="offset_title"><a href="#">{{$product1->product_name}}</a></h3>
@@ -374,7 +382,7 @@
                             @endif
 
 
-                                <a href="/add-wishlist/{{$product1->id}}"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
+                                <button type="button" onclick="addWishlist({{$product1->id}})"  class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button>
 
                                 <a href="javascript:void(null)" onclick="addCompare({{$product1->id}})"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip top">Add to Compare</span></button></a>
 
@@ -519,6 +527,23 @@
 
 
     @foreach($related_product as $r_product)
+      <?php if(isset($r_product)){
+                       if($r_product->amount != null){
+                if($r_product->price_type == "discount"){
+                    if($r_product->value_type == "percentage"){
+                         $r_product->sales_price = $r_product->sales_price - ($r_product->sales_price * ($r_product->amount / 100));
+                    }else{
+                        $r_product->sales_price = $r_product->sales_price - $r_product->amount;;
+                    }
+                }else{
+                     if($r_product->value_type == "percentage"){
+                         $r_product->sales_price = $r_product->sales_price + ($r_product->sales_price * ($r_product->amount / 100));
+                    }else{
+                        $r_product->sales_price = $r_product->sales_price + $r_product->amount; 
+                    }
+                }
+            }
+        } ?>
         <div class="product_item">
 
 
@@ -541,16 +566,24 @@
 
                     </div>
 
-                    <a href="/add-wishlist/{{$r_product->id}}" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
+                    <a href="javascript:void(null)" onclick="addWishlist({{$r_product->id}})" class="button_dark_grey def_icon_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
 
-                    <a href="/compare-product/{{$r_product->id}}" class="button_dark_grey def_icon_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
+                    <a href="javascript:void(null)" onclick="addCompare({{$product1->id}})" class="button_dark_grey def_icon_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
 
                 </div>
 
             </div>
 
-            <div class="label_new">New</div>
+            {{-- <div class="label_new">New</div> --}}
+    @if($r_product->regular_price != null && $r_product->category != 7)
 
+												<div class="label_offer percentage">
+													<?php $v1 = $r_product->regular_price - $r_product->sales_price;
+													$v2 = ceil($v1/$r_product->regular_price*100); ?>
+													<div>{{$v2}}%</div>OFF
+		
+												</div>
+												@endif
 
             <div class="description">
 

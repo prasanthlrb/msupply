@@ -103,11 +103,11 @@
 											<td data-title="Product Image">
 												
 												
-										<?php if($product1->product_image != ""){ ?>
-	                                        <img src="{{asset('/product_img').'/'.$product1->product_image}}" alt="">
-                                        <?php } else{ ?>
-	                                        <a href="#"><img src="images/product_thumb_4.jpg" alt=""></a>
-                                        <?php } ?> 
+										@if($product1->category == 1)
+	                                        <img src="http://www.kagtech.net/KAGAPP/Partsupload/{{$product1->product_image}}" alt="">
+											@else
+												<img src="{{asset('/product_img').'/'.$product1->product_image}}" alt="">
+											@endif
 
 											</td>
 
@@ -119,7 +119,11 @@
 												<a href="/product-view/{{$product1->product_id}}" class="product_title">{{$product1->product_name}}</a>
 												<!-- <a href="#">Beauty Clearance</a> -->
 											</td>
+											@if($product1->category != 7)
 											<td data-title="Price" class="total">{{$product1->sales_price}}</td>
+											@else
+											<td></td>
+											@endif
 										<form method="post" id="termsData">
 											{{csrf_field()}}
 											<!-- <td data-title="Quantity">
@@ -137,7 +141,7 @@
 					
 													</li>
 													<li>
-														<a href="#" onclick="removewish({{$product1->id}})" class="button_dark_grey">Remove</a>
+														<a href="javascript:void(null)" onclick="removewish({{$product1->id}})" class="button_dark_grey">Remove</a>
 													</li>
 												</ul>
 											</td>

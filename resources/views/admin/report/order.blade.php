@@ -156,7 +156,7 @@ $('.get_product').change(()=>{
    var cat = $('#cat').val();
 
     $.ajax({
-            url:"{{ route('report.getOrder')}}",
+            url:"/admin/report/get-order",
             method:"get",
             data:{brand:brand,cat:cat},
             success:function(data){
@@ -170,7 +170,7 @@ $('#customer_type').change(()=>{
    var customer_type = $('#customer_type').val();
 
     $.ajax({
-            url:"{{ route('report.getOrderCustomer')}}",
+            url:"/admin/report/get-order-customer",
             method:"get",
             data:{customer_type:customer_type},
             success:function(data){

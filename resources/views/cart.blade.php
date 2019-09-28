@@ -61,6 +61,7 @@ var cartQty = $('#cartQty'+id).val();
         }
     });
 }
+
 function cleanCart(){
 	$.ajax({        
 		url : '/clean-cart',

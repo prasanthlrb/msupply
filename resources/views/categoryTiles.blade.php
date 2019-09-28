@@ -85,7 +85,7 @@
 
                 <!-- - - - - - - - - - - - - - Tags - - - - - - - - - - - - - - - - -->
 
-                <section class="section_offset">
+                {{-- <section class="section_offset">
 
                     <h3>Brand</h3>
 
@@ -101,7 +101,7 @@
                         
                     </div>
 
-                </section>
+                </section> --}}
 
             
 
@@ -312,9 +312,9 @@
 
                                             </div>
 
-                                            <a href="/add-wishlist/{{$product1->product_id}}" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
+                                        <a href="javascript:void(null)" onclick="addWishlist({{$product1->product_id}})" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip right">Add to Wishlist</span></a>
 
-                                            <a href="/compare-product/{{$product1->product_id}}" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
+                                            <a href="javascript:void(null)" onclick="addCompare({{$product1->product_id}})" class="button_dark_grey def_icon_btn middle_btn add_to_compare tooltip_container"><span class="tooltip left">Add to Compare</span></a>
 
                                         </div>
 

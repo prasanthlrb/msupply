@@ -217,7 +217,7 @@ var saved_markers = '';
 $('#orderStatusChangr').click(function(){
     var orderStatus = $('#orderStatus').val();
     $.ajax({
-            url:"{{ route('orderTransportItem.action')}}",
+            url:"/admin/order-Transport-item-action",
             method:"get",
             data:{id:"{{$order->id}}",status:orderStatus},
             success:function(data){

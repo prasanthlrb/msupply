@@ -388,7 +388,11 @@ class productController extends Controller
     }
 
         $product = new product;
-        $product->category = collect($request->category)->implode(',');
+       // $product->category = collect($request->category)->implode(',');
+        $product->category = $request->category;
+        $product->sub_category = $request->sub_category;
+        $product->second_sub_category = $request->second_sub_category;
+        $product->third_sub_category = $request->third_sub_category;
         $product->product_name = $request->product_name;
         $product->group = $request->group;
         $product->brand_name = $request->brand_name;
@@ -527,7 +531,11 @@ class productController extends Controller
             // 'sku'=>'required|unique:product_datas',
         ]);
         $product = product::find($request->product_page_id);
-        $product->category = collect($request->category)->implode(',');
+        //$product->category = collect($request->category)->implode(',');
+          $product->category = $request->category;
+        $product->sub_category = $request->sub_category;
+        $product->second_sub_category = $request->second_sub_category;
+        $product->third_sub_category = $request->third_sub_category;
         $product->product_name = $request->product_name;
         $product->group = $request->group;
         $product->brand_name = $request->brand_name;
@@ -1220,13 +1228,26 @@ public function getProduct(){
     }
 
     public function viewTitle(){
-        $subcategory = category::whereIn('parent_id',['2','3'])->get();
-        return view('admin.tiles',compact('subcategory'));
+        $category = category::select('id','category_name')->whereIn('parent_id',['2','3'])->get();
+        foreach($category as $row){
+          $data[]=$row->id;  
+        }
+        $subcategory = category::whereIn('parent_id',$data)->get();
+        //return response()->json($data);
+        return view('admin.tiles',compact('category','subcategory'));
     }
 
     public function updateTilesSubCategory(Request $request){
          $product = product::find($request->product_id);
          $product->second_sub_category = $request->data;
+         $product->save();
+        //return response()->json($request);
+        return response()->json(['message'=>'SubCategory Update Successfully'],200);
+    }
+
+    public function updateTilesThirdSubCategory(Request $request){
+         $product = product::find($request->product_id);
+         $product->third_sub_category = $request->data;
          $product->save();
         //return response()->json($request);
         return response()->json(['message'=>'SubCategory Update Successfully'],200);
@@ -1281,10 +1302,17 @@ public function getProduct(){
         $stock = tiles_stock_location::where('product_id',$product->id)->get();
         $output ='';
         $subcategory = null;
+        $thirdSubcategory = null;
         if($product->second_sub_category !=0){
             $category = category::find($product->second_sub_category);
             if(isset($category)){
                 $subcategory = $category->id;
+            }
+        }
+        if($product->third_sub_category !=0){
+            $third_sub_category = category::find($product->third_sub_category);
+            if(isset($third_sub_category)){
+                $thirdSubcategory = $third_sub_category->id;
             }
         }
         if(count($stock) >0){
@@ -1300,7 +1328,7 @@ public function getProduct(){
                                     <td class="font-weight-bold">No Stock</td>
                                 </tr>';
         }
-        return response()->json(array($product,$output,$subcategory));
+        return response()->json(array($product,$output,$subcategory,$thirdSubcategory));
     }
 
     //tiles price update
@@ -1322,5 +1350,23 @@ public function getProduct(){
         $product->amount = $request->data;
         $product->save();
         return response()->json(['message'=>'Upload Successfully'],200);
+    }
+    public function updateLength(Request $request){
+       $product = product::find($request->product_id);
+        $product->length = $request->data;
+        $product->save();
+        return response()->json(['message'=>'Upload Successfully'],200);
+    }
+
+    public function tilesTax(Request $request){
+        $request->validate([
+            'tax_type'=>'required',
+            'tax'=>'required'
+        ]);
+        $values = array(
+            'tax_type'=>$request->tax_type,
+            'tax'=>$request->tax);
+        $all_product = product::where('category',1)->update($values);
+        return back();
     }
 }

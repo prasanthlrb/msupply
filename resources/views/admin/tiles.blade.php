@@ -180,13 +180,28 @@
                                 </tr>
                                 <tr>
                                     <td>Total Coverage in Sqft.	</td>
-                                    <td class="font-weight-bold" id="length"></td>
+                                     <td><input type="text" style="width:100%" name="length" id="length"></td>
+                                  
                                 </tr>
                                 <tr>
                                     <td>Subcategory</td>
                                     <td>
                                 
                                       <select name="second_sub_category" id="second_sub_category" class="form-control">
+                                        <option value="" selected="" disabled="">Select </option>
+                                         @foreach($category as $cat)
+                                            <option value="{{$cat->id}}">{{$cat->category_name}}</option>
+                                           @endforeach
+                                        </select>
+                               
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>ThirdSubcategory</td>
+                                    <td>
+                                
+                                      <select name="third_sub_category" id="third_sub_category" class="form-control">
                                         <option value="" selected="" disabled="">Select </option>
                                          @foreach($subcategory as $cat)
                                             <option value="{{$cat->id}}">{{$cat->category_name}}</option>
@@ -317,10 +332,13 @@ function getProduct(id){
             $('#amount').val(data[0].amount);
             $('#product_description').text(data[0].product_description);
             $('#product_name').text(data[0].product_name);
-            $('#length').text(data[0].length);
+            $('#length').val(data[0].length);
             $('#updated_at').text(data[0].updated_at);
             if(data[2] != null){
             $('select[name=second_sub_category]').val(data[2]);
+            }
+            if(data[3] != null){
+            $('select[name=third_sub_category]').val(data[3]);
             }
             $('#sales_price').text(data[0].sales_price ? "Rs : "+data[0].sales_price : data[0].sales_price);
             $('#location-stock').html(data[1]);
@@ -336,6 +354,25 @@ $('#second_sub_category').on('change',function(){
     let subcategory = $('#second_sub_category').val();
   $.ajax({
           url : '/admin/update-secondSubcategory',
+          type: "GET",
+          data: {product_id:product_id,data:subcategory},
+          dataType: "JSON",
+          success: function(data)
+          {
+            console.log(data);
+              // $("#brand_form")[0].reset();
+                // $('#updateTile2Cat').modal('hide');
+              //  $('.zero-configuration').load(location.href+' .zero-configuration');
+                toastr.success(data.message);
+          },error: function (data) {
+            toastr.error('Subcategory Required', 'Required!');
+        }
+      });
+})
+$('#third_sub_category').on('change',function(){
+    let subcategory = $('#third_sub_category').val();
+  $.ajax({
+          url : '/admin/update-thirdSubcategory',
           type: "GET",
           data: {product_id:product_id,data:subcategory},
           dataType: "JSON",
@@ -383,6 +420,19 @@ $('#amount').change(function(){
         url: '/admin/update-amount',
         method: "GET",
         data: { product_id: product_id, data: amount },
+        dataType: "JSON",
+        success: function (data) {
+            //console.log(data);
+            toastr.success(data.message);
+        }
+    })
+})
+$('#length').change(function(){
+  let length = $('#length').val();
+   $.ajax({
+        url: '/admin/update-length',
+        method: "GET",
+        data: { product_id: product_id, data: length },
         dataType: "JSON",
         success: function (data) {
             //console.log(data);

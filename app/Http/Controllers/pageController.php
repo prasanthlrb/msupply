@@ -55,6 +55,7 @@ class pageController extends Controller
     public function privacy()
     {
         $data = home_setting::find(1);
+       // return response()->json($data);
         return view('privacy', compact('data'));
     }
 
@@ -128,6 +129,7 @@ class pageController extends Controller
                                 if($cat->id == 2 || $cat->id == 3){
                                     
                                     $product_data = $this->tilesLocationBasedData('sub_category',$cat->id);
+                                    //return response()->json($product_data);
                                     if($product_data->count() == 0){
                                     $product_data = $this->tilesLocationBasedData('second_sub_category',$cat->id);
                                 }
@@ -141,6 +143,26 @@ class pageController extends Controller
                             
                        if($product_data->count()>0){
                            if($product_data[0]->group_product == null){
+                               if(count($product_data) > 0 && $product_data[0]->category !=1){
+               foreach($product_data as $row){
+                       if($row->amount != null){
+                if($row->price_type == "discount"){
+                    if($row->value_type == "percentage"){
+                       $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price - $row->amount;;
+                    }
+                }else{
+                     if($row->value_type == "percentage"){
+                       $row->sales_price = $row->sales_price + ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price + $row->amount; 
+                    }
+                }
+            }
+            }
+        }
+    
                             foreach ($product_data as $row) {
                                 $output .= '
             <div class="product_item type_2">
@@ -166,9 +188,18 @@ class pageController extends Controller
             $output.='
             </div>
             </div>
-            </div>
-            
-            <div class="description">
+            </div>';
+                       
+            if($row->regular_price != null && $row->category != 7){
+
+                                                $v1 = $row->regular_price - $row->sales_price;
+                                                $v2 = ceil($v1/$row->regular_price*100); 
+											$output .= '<div class="label_offer percentage">
+													<div>'.$v2.'%</div>OFF</div>';
+		
+												
+                        }
+            $output .='<div class="description">
             <a href="/product/' . $row->id . '">' . $row->product_name . '</a>
             <div class="clearfix product_info">';
 
@@ -235,6 +266,8 @@ class pageController extends Controller
 			<a href="javascript:void(null)" onclick="addCompare('.$row->id.')" class="button_dark_grey middle_btn def_icon_btn add_to_compare tooltip_container"><span class="tooltip top">Add to Compare</span></a>
 
             </div></div>';
+
+            								
                             }
                         }else{
 
@@ -267,7 +300,7 @@ $output .= '
             </div></div>';
                                 }
                             }
-                            //
+                           
                         }
                     }
                             $output .= '</div>
@@ -291,6 +324,25 @@ $output .= '
                 <h3 class="offset_title">' . $layout->title . '</h3>
                 <div class="owl_carousel carousel_in_tabs">';
                     $layout_prod = product::whereIn('id', $layout_prod_collection)->get();
+                    if(count($layout_prod) > 0){
+               foreach($layout_prod as $row){
+                       if($row->amount != null){
+                if($row->price_type == "discount"){
+                    if($row->value_type == "percentage"){
+                      $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price - $row->amount;;
+                    }
+                }else{
+                     if($row->value_type == "percentage"){
+                 $row->sales_price = $row->sales_price + ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price + $row->amount; 
+                    }
+                }
+            }
+            }
+        }
                     foreach ($layout_prod as $row) {
                         $output .= '
                 <div class="product_item type_2">
@@ -301,8 +353,17 @@ $output .= '
                             <a href="#" class="button_dark_grey middle_btn quick_view" data-modal-url="/quick-view/' . $row->id . '">Quick View</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="description">
+                    </div>';
+                      if($row->regular_price != null && $row->category != 7){
+
+                                                $v1 = $row->regular_price - $row->sales_price;
+                                                $v2 = ceil($v1/$row->regular_price*100); 
+											$output .= '<div class="label_offer percentage">
+													<div>'.$v2.'%</div>OFF</div>';
+		
+												
+                        }
+                    $output .='<div class="description">
                     <a href="#">' . $row->product_name . '</a>
                         <div class="clearfix product_info"> ';
 
@@ -405,15 +466,13 @@ $output .= '
                        if($row->amount != null){
                 if($row->price_type == "discount"){
                     if($row->value_type == "percentage"){
-                        $discount = $row->sales_price / $row->amount;
-                        $row->sales_price = $row->sales_price - $discount;
+                      $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
                     }else{
                         $row->sales_price = $row->sales_price - $row->amount;;
                     }
                 }else{
                      if($row->value_type == "percentage"){
-                         $discount = $row->sales_price / $row->amount;
-                        $row->sales_price = $row->sales_price + $discount; 
+                 $row->sales_price = $row->sales_price + ($row->sales_price * ($row->amount / 100));
                     }else{
                         $row->sales_price = $row->sales_price + $row->amount; 
                     }
@@ -437,7 +496,21 @@ $output .= '
     {
         $upload = upload::where('product_id', $id)->get();
         $product = product::find($id);
-
+                  if($product->amount != null){
+                if($product->price_type == "discount"){
+                    if($product->value_type == "percentage"){
+                      $product->sales_price = $product->sales_price - ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price - $product->amount;;
+                    }
+                }else{
+                     if($product->value_type == "percentage"){
+                 $product->sales_price = $product->sales_price + ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price + $product->amount; 
+                    }
+                }
+            }
         $output = '
      <div id="quick_view" class="modal_window">
 
@@ -484,9 +557,18 @@ $output .= '
                  </div>
 
 
-           </div>
+           </div>';
+  if($product->regular_price != null && $product->category != 7){
 
+                                                $v1 = $product->regular_price - $product->sales_price;
+                                                $v2 = ceil($v1/$product->regular_price*100); 
+											$output .= '<div class="label_offer percentage">
+													<div>'.$v2.'%</div>OFF</div>';
+		
+												
+                        }
 
+        $output .='
            <div class="single_product_description">
 
                  <h3><a href="/product/' . $product->id . '">' . $product->product_name . '
@@ -537,7 +619,7 @@ $output .= '
                  <input type="hidden" id="shipping_amount" name="shipping_amount" value="' . $product->shipping_amount . '">
                  <div class="buttons_row">
                      <a class="button_blue middle_btn" href="/product/' . $product->id . '">See product details</a>
-                     <a href="/add-wishlist/' . $product->id . '"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
+                     <a href="javascript:void(null)" onclick="addWishlist(' . $product->id . ')"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
 
                  </div>
      </form>
@@ -553,7 +635,22 @@ $output .= '
     {
         $upload = upload::where('product_id', $id)->get();
         $product = product::find($id);
-
+          if($product->amount != null){
+                if($product->price_type == "discount"){
+                    if($product->value_type == "percentage"){
+                         $product->sales_price = $product->sales_price - ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price - $product->amount;;
+                    }
+                }else{
+                     if($product->value_type == "percentage"){
+                        $product->sales_price = $product->sales_price + ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price + $product->amount; 
+                    }
+                }
+            }
+          
         $output = '
      <div id="quick_view" class="modal_window">
 
@@ -624,11 +721,11 @@ $output .= '
      ';
 
         $output .= '
-                 <input type="hidden" id="shipping_amount" name="shipping_amount" value="' . $product->shipping_amount . '">
+                 
                  
                  <div class="buttons_row">
                      <a class="button_blue middle_btn" href="/product/' . $product->id . '">See product details</a>
-                     <a href="/add-wishlist/' . $product->id . '"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
+                     <a href="javascript:void(null)" onclick="addWishlist(' . $product->id . ')"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
 
                  </div>
      </form>
@@ -710,7 +807,7 @@ $output .= '
                  
                  <div class="buttons_row">
                      <a class="button_blue middle_btn" href="/product/' . $product->id . '">See product details</a>
-                     <a href="/add-wishlist/' . $product->id . '"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
+                     <a href="javascript:void(null)" onclick="addWishlist(' . $product->id . ')"><button type="button" class="button_dark_grey def_icon_btn middle_btn add_to_wishlist tooltip_container"><span class="tooltip top">Add to Wishlist</span></button></a>
 
                  </div>
      
@@ -741,8 +838,8 @@ $output .= '
 
     public function removeCompare($id)
     {
+        try {
         $remove = '' . $id . '';
-
         if (Session::has('compare')) {
             foreach (Session::get('compare') as $key => $value) {
                 if ($value === $remove) {
@@ -750,8 +847,20 @@ $output .= '
                     break;
                 }
             }
+            foreach (Session::get('compare') as $key => $value) {
+                $datas[] = $value;
+            }
+            Session::forget('compare');
+            foreach($datas as $data){
+               Session::push('compare', $data); 
+            }
         }
         return redirect('compare');
+    }
+    catch (\Exception $e) {
+
+    return redirect('compare');
+}
     }
 
     public function addCompare($id)
@@ -935,31 +1044,30 @@ $output .= '
         return response()->json(Session::get('transport'));
     }
 
-    public function filter(Request $request){
-        $brand = brand::all();
-        $search = $request->search;
-        $category = $request->category;
-        if($search != "" && $category !="All Categories"){
-            $product = DB::table('products')
-            ->where('products.category', 'like', '%' . $category . '%')
-            ->orWhere('product_name', 'like', '%' . $search . '%')
-            ->orderBy('created_at','desc')
-            ->paginate(9);
-        }else if($search == "" && $category =="All Categories"){
-            $product = [];
-        }else if($search != "" && $category =="All Categories"){
-            $product = DB::table('products')
-            ->where('product_name', 'like', '%' . $search . '%')
-            ->orderBy('created_at','desc')
-            ->paginate(9);
-        }else{
-            $product = DB::table('products')
-            ->where('products.category', 'like', '%' . $category . '%')
-            ->orderBy('created_at','desc')
-            ->paginate(9);
-        }
-        return view('filterView',compact('product','brand'))->withInput(['search' => $search]);
-    }
+    // public function filter(Request $request){
+    //     //return response()->json($request);
+    //     $search = $request->search;
+    //     $category = $request->website_main_category;
+    //     if($search != null && $category !="All Categories"){
+    //         $categories = category::where('category_name',$category)->first();
+    //         $product = product::where('category',$categories->id)->where('product_name', 'like', '%' . $search . '%')->take(9)
+    //         ->get();
+    //     }else if($search == null && $category !="All Categories"){
+    //         $categories = category::where('category_name',$category)->first();
+    //         //return response()->json($category);
+    //         $product = product::where('category',$categories->id)->take(9)->get();
+
+    //     }else if($search != null && $category =="All Categories"){
+    //         $product = DB::table('products')
+    //         ->where('product_name', 'like', '%' . $search . '%')
+    //         ->orderBy('created_at','desc')
+    //         ->take(9)
+    //         ->get();
+    //     }else{
+    //          $product = [];
+    //     }
+    //     return view('filterView',compact('product'))->withInput(['search' => $search]);
+    // }
 
     //public function contactMail(){
     public function contactMail(Request $request){
@@ -978,6 +1086,21 @@ $output .= '
     public function addToCart($id, $qty){
         $cart_qty = Cart::get($id);
         $product = product::find($id);
+            if($product->amount != null){
+                if($product->price_type == "discount"){
+                    if($product->value_type == "percentage"){
+                       $product->sales_price = $product->sales_price - ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price - $product->amount;;
+                    }
+                }else{
+                     if($product->value_type == "percentage"){
+                       $product->sales_price = $product->sales_price + ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price + $product->amount; 
+                    }
+                }
+            }
         $totalQty = $cart_qty['quantity'] + $qty;
         if($product->stock_quantity >= $totalQty){
             $product_attribute = product_attribute::where('product_id','=',$id)->get();
@@ -1107,15 +1230,14 @@ $output .= '
             if($lit->amount != null){
                 if($lit->price_type == "discount"){
                     if($lit->value_type == "percentage"){
-                        $discount = $color->price / $lit->amount;
-                        $color->price = $color->price - $discount;
+                        $color->price = $color->price - ($color->price * ($lit->amount / 100));
+                        
                     }else{
                         $color->price = $color->price - $lit->amount;;
                     }
                 }else{
                      if($lit->value_type == "percentage"){
-                         $discount = $color->price / $lit->amount;
-                        $color->price = $color->price + $discount; 
+                        $color->price = $color->price + ($color->price * ($lit->amount / 100));
                     }else{
                         $color->price = $color->price + $lit->amount; 
                     }
@@ -1145,7 +1267,74 @@ $output .= '
        // return response()->json($where,$where_value);
         $location = Session::get('locations');
         //$location = 'Salem';
-        $data = array(
+            $stock = DB::table('tiles_stock_locations as tsl')
+                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type,p.group_product,p.category,p.id,p.regular_price,p.sales_price'))
+                    ->whereIn('tsl.location', $this->locationFullData()[$location])
+                    ->where('p.sales_price','!=',null)
+                    ->where($where,$where_value)
+                    ->join('products as p','p.id','=','tsl.product_id')
+                    ->groupBy('tsl.product_id')
+                    ->orderBy('stocks','desc')
+                    ->take(20)
+                    ->get();
+
+                        if(count($stock) > 0){
+               foreach($stock as $row){
+                       if($row->amount != null && $row->sales_price != null){
+                if($row->price_type == "discount"){
+                    if($row->value_type == "percentage"){
+                        $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price - $row->amount;;
+                    }
+                }else{
+                     if($row->value_type == "percentage"){
+                         //$discount = $row->sales_price / $row->amount;
+                        $row->sales_price = $discount = $row->sales_price + ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price + $row->amount; 
+                    }
+                }
+            }
+            }
+        }
+
+
+
+                     
+            //$stock = tiles_stock_location::whereIn('location',$data[$location])->get();
+        
+        return $stock;
+    }
+    public function tilesSingleLocation($id){
+        $location = Session::get('locations');
+             $stock = DB::table('tiles_stock_locations as tsl')
+                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type,p.group_product,p.category,p.id,p.regular_price,p.sales_price,p.width,p.weight,p.length,p.items,p.product_description'))
+                    ->whereIn('tsl.location', $this->locationFullData()[$location])
+                    ->where('p.id',$id)
+                    ->join('products as p','p.id','=','tsl.product_id')
+                    ->groupBy('tsl.product_id')
+                    ->orderBy('stocks','desc')
+                    ->first();
+                if($stock->amount != null){
+                if($stock->price_type == "discount"){
+                    if($stock->value_type == "percentage"){
+                         $stock->sales_price = $stock->sales_price - ($stock->sales_price * ($stock->amount / 100));
+                    }else{
+                        $stock->sales_price = $stock->sales_price - $stock->amount;;
+                    }
+                }else{
+                     if($stock->value_type == "percentage"){
+                        $stock->sales_price = $stock->sales_price + ($stock->sales_price * ($stock->amount / 100));
+                    }else{
+                        $stock->sales_price = $stock->sales_price + $stock->amount; 
+                    }
+                }
+            }
+            return $stock;
+    }
+    public function locationFullData(){
+            return  $data = array(
             'Ariyalur'=>['Trichy','Karaikal'],
             'Chennai'=>['Perungalthur','Pallavaram','Vadapalani','Tambaram'],
             'Coimbatore'=>['Coimbatore'],
@@ -1179,42 +1368,7 @@ $output .= '
             'Vellore'=>['Vellore'],
             'Viluppuram'=>['Pondicherry'],
         );
-      
-            $stock = DB::table('tiles_stock_locations as tsl')
-                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type,p.group_product,p.category,p.id,p.regular_price,p.sales_price'))
-                    ->whereIn('tsl.location', $data[$location])
-                    ->where('p.sales_price','!=',null)
-                    ->where($where,$where_value)
-                    ->join('products as p','p.id','=','tsl.product_id')
-                    ->groupBy('tsl.product_id')
-                    ->orderBy('stocks','desc')
-                    ->take(20)
-                    ->get();
-                     if(count($stock)>0){
-                 foreach($stock as $row){
-                       if($row->amount != null){
-                if($row->price_type == "discount"){
-                    if($row->value_type == "percentage"){
-                        $discount = $row->sales_price / $row->amount;
-                        $row->sales_price = $row->sales_price - $discount;
-                    }else{
-                        $row->sales_price = $row->sales_price - $row->amount;;
-                    }
-                }else{
-                     if($row->value_type == "percentage"){
-                         $discount = $row->sales_price / $row->amount;
-                        $row->sales_price = $row->sales_price + $discount; 
-                    }else{
-                        $row->sales_price = $row->sales_price + $row->amount; 
-                    }
-                }
-            }
-            }
         }
-            //$stock = tiles_stock_location::whereIn('location',$data[$location])->get();
-        
-        return $stock;
-    }
 
     public function viewCompare(){
         if(Session::has('compare') && count(Session::get('compare')) >0){
@@ -1225,7 +1379,12 @@ $output .= '
             return view('compare_paint',compact('product','pg','pl'));
         }
         if($product[0]->sub_category != null){
-            $related = product::where('sub_category',$product[0]->sub_category)->where('sales_price','!=',null)->take(10)->get();
+            if($product[0]->category == 1){
+                $related = $this->tilesLocationBasedData('sub_category',$product[0]->sub_category);
+            }else{
+
+                $related = product::where('sub_category',$product[0]->sub_category)->where('sales_price','!=',null)->take(10)->get();
+            }
         }else{
              $related = product::where('category',$product[0]->category)->where('sales_price','!=',null)->take(10)->get();
         }
@@ -1233,7 +1392,122 @@ $output .= '
         $product= [];
         $related =[];
     }
-   
+    if(count($product) > 0){
+               foreach($product as $row){
+                       if($row->amount != null && $row->sales_price != null){
+                if($row->price_type == "discount"){
+                    if($row->value_type == "percentage"){
+                        $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price - $row->amount;;
+                    }
+                }else{
+                     if($row->value_type == "percentage"){
+                         //$discount = $row->sales_price / $row->amount;
+                        $row->sales_price = $discount = $row->sales_price + ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price + $row->amount; 
+                    }
+                }
+            }
+            }
+        }
+    if(count($related) > 0){
+               foreach($related as $row){
+                       if($row->amount != null && $row->sales_price != null){
+                if($row->price_type == "discount"){
+                    if($row->value_type == "percentage"){
+                        $row->sales_price = $row->sales_price - ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price - $row->amount;;
+                    }
+                }else{
+                     if($row->value_type == "percentage"){
+                         //$discount = $row->sales_price / $row->amount;
+                        $row->sales_price = $discount = $row->sales_price + ($row->sales_price * ($row->amount / 100));
+                    }else{
+                        $row->sales_price = $row->sales_price + $row->amount; 
+                    }
+                }
+            }
+            }
+        }
+    //return response()->json(Session::get('compare'));
     return view('compare',compact('product','related'));
+    }
+
+    public function searchBox(Request $request){
+        $result = product::where('product_name', 'like', '%' . $request->search . '%')->where('group_product',null)->take(9)->get();
+        if($result->count() >0){
+            if($result[0]->category ==1){
+                $location = Session::get('locations');
+                 $result = DB::table('tiles_stock_locations as tsl')
+                    ->select(DB::raw('sum(tsl.stock) as stocks, tsl.product_id,p.product_name,p.product_image,p.sub_category,p.sales_price,p.amount,p.price_type,p.value_type,p.group_product,p.category,p.id'))
+                    ->whereIn('tsl.location', $this->locationFullData()[$location])
+                    ->where('p.sales_price','!=',null)
+                    ->where('tsl.stock','!=',null)
+                    ->where('product_name','like','%'.$request->search . '%')
+                    ->join('products as p','p.id','=','tsl.product_id')
+                    ->groupBy('tsl.product_id')
+                    ->orderBy('stocks','desc')
+                    ->take(9)
+                    ->get();
+                    if($result->isEmpty()){
+                        return response()->json();
+                    }
+            }
+            $output ='<ul class="options_list dropdown active visible find" style="z-index: 117;margin-top: -19px;">';
+            foreach($result as $row){
+                $output .='<li class="animated_item" style="transition-delay:0.1s"><a href="/product/'.$row->id.'">'.$row->product_name.'</a></li>';
+            }
+            $output .='</ul>';
+            return response()->json($output);
+        }
+        return response()->json($result);
+    }
+
+    public function compareProduct($id){
+         $pAlready = 0;
+        if (Session::has('compare') && count(Session::get('compare')) >0) {
+            if (!in_array($id, Session::get('compare'))) {
+                $pro1 = product::find($id);
+                $pro2 = product::find(Session::get('compare')[0]);
+                if($pro1->category == $pro2->category){
+                    if($pro1->sub_category != null){
+                        if($pro1->sub_category == $pro2->sub_category){
+                          Session::push('compare', $id);
+                        $pAlready = 1;  
+                        }else{
+                    Session::forget('compare');
+                    Session::push('compare', $id);
+                    $pAlready = 1;
+                        }
+
+                    }else{
+                         Session::push('compare', $id);
+                        $pAlready = 1;
+                    }
+                }else{
+                    Session::forget('compare');
+                    Session::push('compare', $id);
+                    $pAlready = 1;
+                }
+               
+            }
+        } else {
+            Session::push('compare', $id);
+            $pAlready = 1;
+        }
+        // $product = $id;
+        // $arraydata=array();
+        // if(!empty(Session::get('compare'))){
+        //     foreach(Session::get('compare') as $data){
+        //         $arraydata[]=$data;
+        //     }
+        // }
+        // if(!in_array($product, $arraydata)){
+        //     Session::push('compare', $arraydata);
+        // }
+        return redirect('/compare');
     }
 }

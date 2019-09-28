@@ -23,10 +23,10 @@
                 <h1>Shipping details</h1>
 
                 <div class="theme_box clearfix">
-                    @if(isset($data[0]->shipping_details))
+                    @if(isset($data->shipping_details))
                     <?php 
                   
-                    echo html_entity_decode($data[0]->shipping_details)?>
+                    echo html_entity_decode($data->shipping_details)?>
                     @endif
                 </div><!--/ .theme_box-->
 

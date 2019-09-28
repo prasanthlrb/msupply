@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('category');
             $table->number('sub_category')->nullable();
             $table->number('second_sub_category')->nullable();
+            $table->number('third_sub_category')->nullable();
             $table->string('group')->nullable();
             $table->string('product_name');
             $table->string('brand_name')->nullable();

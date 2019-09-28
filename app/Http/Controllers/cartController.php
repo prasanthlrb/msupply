@@ -14,58 +14,68 @@ class cartController extends Controller
 {
     public function postCartItem(Request $request){
         $product = product::find($request->product_id);
-        $price = $product->sales_price;
-        $additionalPrice =0;
-        $optionData = $request;
+    //     $price = $product->sales_price;
+    //     $additionalPrice =0;
+    //     $optionData = $request;
 
 
-        $option_group = optionGroup::where('product_id',$request->product_id)->get();
-        $optionName =$request->product_id;
-        // $option = '';
-        if(count($option_group) > 0){
-        foreach($option_group as $group){
-            $optionVal = optionValue::where('group_id',$group->id)->where('name',$request[$group->id])->first();
-            $optionName = $optionName.'_'.$group->id.'_'.$optionVal->id;
-            if($optionVal->home_option != 1){
-                if($price < $optionVal->current_price){
-                    $price = $optionVal->current_price;
-                }
-                if($optionVal->additional_price !=null){
-                    $additionalPrice +=$optionVal->additional_price;
+    //     $option_group = optionGroup::where('product_id',$request->product_id)->get();
+    //     $optionName =$request->product_id;
+    //     // $option = '';
+    //     if(count($option_group) > 0){
+    //     foreach($option_group as $group){
+    //         $optionVal = optionValue::where('group_id',$group->id)->where('name',$request[$group->id])->first();
+    //         $optionName = $optionName.'_'.$group->id.'_'.$optionVal->id;
+    //         if($optionVal->home_option != 1){
+    //             if($price < $optionVal->current_price){
+    //                 $price = $optionVal->current_price;
+    //             }
+    //             if($optionVal->additional_price !=null){
+    //                 $additionalPrice +=$optionVal->additional_price;
+    //             }
+    //         }
+
+    //         $getOptionData[] = $optionVal;
+    //     }
+    //     $getOption['option'] = $getOptionData;
+    // }
+
+
+        // $cart_qty = Cart::get($optionName);
+        // $totalQty = $cart_qty['quantity'] + $request->qty;
+        // $total_price = ($price+$additionalPrice) * $totalQty;
+
+        //if($product->stock_quantity >= $totalQty){
+                if($product->amount != null){
+                if($product->price_type == "discount"){
+                    if($product->value_type == "percentage"){
+                       $product->sales_price = $product->sales_price - ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price - $product->amount;;
+                    }
+                }else{
+                     if($product->value_type == "percentage"){
+                       $product->sales_price = $product->sales_price + ($product->sales_price * ($product->amount / 100));
+                    }else{
+                        $product->sales_price = $product->sales_price + $product->amount; 
+                    }
                 }
             }
-
-            $getOptionData[] = $optionVal;
-        }
-        $getOption['option'] = $getOptionData;
-    }
-
-        if($request->colors){
-            $optionName =$optionName.'_'.$request->colors;
-            $colorPrice = color::find($request->colors);
-            $additionalPrice += $colorPrice->price;
-            $getOption['colors'] = $colorPrice;
-        }else{
-
-        }
-
-
-        $cart_qty = Cart::get($optionName);
-        $totalQty = $cart_qty['quantity'] + $request->qty;
-        $total_price = ($price+$additionalPrice) * $totalQty;
-
-        if($product->stock_quantity >= $totalQty){
+            $cat = category::find($product->category);
+             $attribute = array(
+                            'product_type'=>$cat->category_name,
+                            );
             Cart::add(array(
-                'id' => $optionName,
+                'id' => $product->id,
                 'name' => $product->product_name,
-                'price' => $total_price * $request->qty,
+                'price' => $product->sales_price,
                 'quantity' => $request->qty,
                 'attributes' =>$getOption,
             ));
-            $status =0;
-        }else{
-            $status =1;
-        }
+           // $status =0;
+        // }else{
+        //     $status =1;
+        // }
 
     $total = Cart::getTotal();
     $quantity = count(Cart::getContent());
@@ -88,7 +98,8 @@ class cartController extends Controller
                             'color'=>true,
                             'product_id'=>$request->product_id,
                             'lit'=>$request->lit,
-                            'color_id'=>$request->colors_id
+                            'color_id'=>$request->colors_id,
+                            'color_code'=>$request->colors_code
                             );
          Cart::add(array(
                 'id' => $optionName,
@@ -180,7 +191,7 @@ class cartController extends Controller
 
         <ul class="sc_product_info">';
             //$color = color::find($cartData['attributes']['color_id']);
-           $output .=' <li>Color Code : '.$cartData['attributes']['color_id'].'</li>
+           $output .=' <li>Color Code : '.$cartData['attributes']['color_code'].'</li>
                     <li>Litreage : '.$cartData['attributes']['lit'].'</li>';
         }else{
            
@@ -372,5 +383,14 @@ echo $output;
            
         }
          return response()->json(Cart::getContent());
+    }
+
+    public function cartUpdateValue($id,$values){
+           Cart::update($id, array(
+        'quantity' => array(
+            'relative' => false,
+            'value' => $values
+  ),
+    ));
     }
 }

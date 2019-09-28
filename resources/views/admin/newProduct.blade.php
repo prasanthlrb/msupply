@@ -88,7 +88,40 @@
                               <div class="form-group row">
                                     <label class="col-md-3 label-control" for="Select Brand">Select Category</label>
                                     <div class="col-md-9">
-                                      <select style="width:100%" name="category[]" id="category" class="select2 form-control col-md-12" multiple="multiple" placeholder="search for Category">
+                                      <select style="width:100%" name="category" id="category" class="select2 form-control col-md-12" placeholder="search for Category">
+                                        @foreach($category as $cat)
+                                        <option value="{{$cat->id}}">{{$cat->category_name}}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                  </div>
+                              <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Select Brand">Select Sub Category</label>
+                                    <div class="col-md-9">
+                                      <select style="width:100%" name="sub_category" id="sub_category" class="select2 form-control col-md-12" placeholder="search for Category">
+                                       <option value="" selected="" disabled="">Select Sub Category</option>
+                                        @foreach($category as $cat)
+                                        <option value="{{$cat->id}}">{{$cat->category_name}}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                  </div>
+                              <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Select Brand">Select Second Sub Category</label>
+                                    <div class="col-md-9">
+                                      <select style="width:100%" name="second_sub_category" id="second_sub_category" class="select2 form-control col-md-12" placeholder="search for Category">
+                                         <option value="" selected="" disabled="">Select Second Category</option>
+                                        @foreach($category as $cat)
+                                        <option value="{{$cat->id}}">{{$cat->category_name}}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                  </div>
+                              <div class="form-group row">
+                                    <label class="col-md-3 label-control" for="Select Brand">Select Third Sub Category</label>
+                                    <div class="col-md-9">
+                                      <select style="width:100%" name="third_sub_category" id="third_sub_category" class="select2 form-control col-md-12" placeholder="search for Category">
+                                        <option value="" selected="" disabled="">Select Third Category</option>
                                         @foreach($category as $cat)
                                         <option value="{{$cat->id}}">{{$cat->category_name}}</option>
                                         @endforeach

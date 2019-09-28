@@ -26,7 +26,7 @@
 							<h1>Company Profile Submit</h1>
 
 							
-              <form action="{{route('submit.company')}}" action="" method="post" class="type_2" enctype="multipart/form-data">
+              <form action="/submit-company" action="" method="post" class="type_2" enctype="multipart/form-data">
 							<section class="theme_box table">
                                    
                                             {{ csrf_field() }}

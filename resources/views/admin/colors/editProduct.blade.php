@@ -43,6 +43,25 @@
                                       </div>
                                     </div>
 
+                                    <div class="form-group row">
+                                      <label class="col-md-3 label-control" for="Select tax_type">Tax Type</label>
+                                      <div class="col-md-9">
+                                        <select name="tax_type" id="tax_type" class="form-control">
+                                        <option value="" selected="" disabled="">Select The Tax Type </option>
+                                        <option value="in" <?php echo $product->tax_type == 'in'? 'selected':''?>>Inclusive</option>
+                                        <option value="out" <?php echo $product->tax_type == 'out'? 'selected':''?>>Exclusive</option>
+
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control"  for="projectinput1">TAX Percentage (%)</label>
+                                        <div class="col-md-9">
+                                        <input type="text" class="form-control" name="tax" id="tax" value="{{$product->tax}}">
+                                      </div>
+                                      </div>
+
 
                                      <div class="form-group row">
                                 <label class="col-md-3 label-control" for="projectinput1">Finishers</label>
@@ -207,7 +226,7 @@
                                  @if($data->amount == null)
                             <input type="text" class="form-control" id="amount_edit{{$data->id}}" name="amount_edit" onchange="paint_lit_change('amount_edit',{{$data->id}})">
                                 @else
-                            <input type="text" id="amount_edit{{$data->id}}" class="form-control" name="amount_edit" value="{{$data->amount}}">
+                            <input type="text" id="amount_edit{{$data->id}}" class="form-control" name="amount_edit" value="{{$data->amount}}" onchange="paint_lit_change('amount_edit',{{$data->id}})">
                                 @endif
                               </div></div>
                           </div>

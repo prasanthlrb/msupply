@@ -17,6 +17,7 @@ class CreateContactinfosTable extends Migration
             $table->increments('id');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->string('toll_free')->nullable();
             $table->string('address',2000)->nullable();
             $table->string('map1',5000)->nullable();
             $table->string('map2',5000)->nullable();

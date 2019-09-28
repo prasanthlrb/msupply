@@ -194,9 +194,10 @@
 									<!-- - - - - - - - - - - - - - Call to action - - - - - - - - - - - - - - - - -->
 
 									<div class="call_us">
-
-										<span>Call us toll free:</span> <b>+91 088700 50001</b>
-
+										<?php $main_mobile = App\contactinfo::all(); ?>
+										@if(count($main_mobile)>0)
+									<span>Call us toll free:</span> <b> {{$main_mobile[0]->toll_free}}</b>
+										@endif
 									</div><!--/ .call_us-->
 
 									<!-- - - - - - - - - - - - - - End call to action - - - - - - - - - - - - - - - - -->
@@ -210,31 +211,29 @@
 
 									<form action="/filter" method="post" class="clearfix search type_2">
 
-										<input value="{{old('search')}}" type="text" name="search" tabindex="1" placeholder="Search..." class="alignleft">
+										<input value="{{old('search')}}" type="text" id="search_box" name="search_box" tabindex="1" placeholder="Search..." class="alignleft">
 										{{ csrf_field() }}
 										<!-- - - - - - - - - - - - - - Categories - - - - - - - - - - - - - - - - -->
 
-											<div class="custom_select search_category alignleft ">
-										<style>
-
-										</style>
-												<select class="manual" style="border: 1px solid #ffffff;" name="website_main_category">
+											{{-- <div class="custom_select search_category alignleft "> --}}
+						
+												{{-- <select class="manual" style="border: 1px solid #ffffff;" name="website_main_category">
 													<option>All Categories</option>
 													@foreach($category as $cats)
 													<option value="{{$cats->category_name}}">{{$cats->category_name}}</option>
 													@endforeach
-												</select>
+												</select> --}}
 
-											</div>
+											{{-- </div> --}}
 
 
 										<!-- - - - - - - - - - - - - - End of categories - - - - - - - - - - - - - - - - -->
 
-										<button type="submit" class="button_blue def_icon_btn alignleft"></button>
+										<button type="button" class="button_blue def_icon_btn alignleft"></button>
 
 									</form><!--/ #search-->
 									<!-- - - - - - - - - - - - - - End search form - - - - - - - - - - - - - - - - -->
-
+									<div id="search_result"></div>
 								</div><!--/ [col]-->
 
 							</div><!--/ .main_header_row-->
@@ -612,7 +611,7 @@
 										<li><a href="/account/orders">Order History</a></li>
 										<li><a href="/account/address">Manage Address</a></li>
 										<li><a href="/account/wishlist">Wish List</a></li>
-										<li><a href="/account/review">Reviews & Ratings</a></li>
+										{{-- <li><a href="/account/review">Reviews & Ratings</a></li> --}}
 
 									</ul>
 
@@ -848,7 +847,7 @@
 		<script src="{{asset('js/colorpicker/colorpicker.js')}}"></script>
 		<script src="{{asset('js/retina.min.js')}}"></script>
 		<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js"></script>
-
+		<script src="{{asset('js/jquery.elevateZoom-3.0.8.min.js')}}"></script>
 		<!-- Theme files
 		============================================ -->
 		<script src="{{asset('js/theme.plugins.js')}}"></script>
@@ -858,6 +857,8 @@
 		<script src="{{ asset('app-assets/js/scripts/extensions/toastr.js')}}" type="text/javascript"></script>
 		<script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js')}}" type="text/javascript"></script>
 
+
+			<script src="{{asset('js/search.js')}}"></script>
 	</body>
 	@yield('extra-js')
 	<script>

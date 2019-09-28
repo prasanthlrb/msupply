@@ -37,11 +37,11 @@ Route::get('/tiles/stock/{id}','pageController@tileStock');
 
 
 //steel calculator
-Route::get('/calculator/steel/{id}','CalculatorController@steelCalc');
+Route::get('/calculator/steel/{id}','calculatorController@steelCalc');
 
 
 //bricks predict
-Route::get('/bricks-price-predict','CalculatorController@bricksPredict');
+Route::get('/bricks-price-predict','calculatorController@bricksPredict');
 //pages route
 
 Route::get('/category-tree','pageController@categoryTree');
@@ -70,12 +70,15 @@ Route::post('/tilesAddtoCart','cartController@tilesProductAddtoCart');
 Route::get('/steelAddtoCart','cartController@steelProductAddtoCart');
 Route::get('/set-cart-item','cartController@getCartItem');
 
+//searchbox
+Route::get('/searchbox','pageController@searchBox');
+
 //Route::get('/wishlist','pageController@wishlist');
 // Route::get('/add-wishlist/{id}','pageController@addWishlist');
 // Route::get('/remove-wish/{id}','pageController@removewish');
 Route::get('/transports','accountController@transport');
 Route::get('/own-transport','accountController@ownTransport');
-Route::get('//edit-transport','accountController@editTransport');
+Route::get('/edit-transport','accountController@editTransport');
 Route::get('/get-transport-data/{id}','pageController@getTransportData');
 Route::get('/removewish/{id}','accountController@removewish');
 Route::get('/filter-brand/{id}','categoryController@filterBrand');
@@ -116,6 +119,7 @@ Route::post('/contact-mail','pageController@contactMail');
 Route::get('/transport-popup/{id}','pageController@transportPopup');
 Auth::routes();
 Auth::routes(['verify' => true]);
+
 Route::group(['prefix' => 'admin'],function(){
 
 
@@ -239,7 +243,8 @@ Route::get('/tiles-upload','settingController@tilesUpload');
 Route::get('/tiles','productController@viewTitle');
 Route::get('/get-tiles-product','productController@getTilesProduct');
 Route::get('/update-secondSubcategory','productController@updateTilesSubCategory');
-
+Route::get('/update-thirdSubcategory','productController@updateTilesThirdSubCategory');
+Route::post('/tiles-tax','productController@tilesTax');
 
 
 //Home Page
@@ -273,16 +278,16 @@ Route::get('/order','orderController@order');
 //Route::get('/all-order','orderController@allOrder')->name('admin.all-order');
 Route::get('/order-item/{id}','orderController@orderItem');
 Route::get('/all-order/{filter}','orderController@allOrder');
-Route::get('/order-action','orderController@orderAction')->name('order.action');
-Route::get('/order-item-action','orderController@orderItemAction')->name('orderitem.action');
+Route::get('/order-action','orderController@orderAction');
+Route::get('/order-item-action','orderController@orderItemAction');
 
 
 //order Transport
 Route::get('/order-transport','orderController@orderTransport');
 Route::get('/transport-order/{filter}','orderController@orderTransportGet');
-Route::get('/order-transport-action','orderController@orderTransportAction')->name('ordertransport.action');
+Route::get('/order-transport-action','orderController@orderTransportAction');
 Route::get('/order-transport-details/{id}','orderController@orderTransportDetails');
-Route::get('/order-Transport-item-action','orderController@orderTransportItemAction')->name('orderTransportItem.action');
+Route::get('/order-Transport-item-action','orderController@orderTransportItemAction');
 
 //customer
 Route::get('/customer','customerController@customer');
@@ -309,8 +314,8 @@ Route::get('/order-report','reportController@order');
 Route::get('/transport-report','reportController@transport');
 Route::post('/report/orders','reportController@orderReport');
 Route::post('/report/transport','reportController@transportReport');
-Route::get('/report/get-order','reportController@getOrderReport')->name('report.getOrder');
-Route::get('/report/get-order-customer','reportController@getOrderCustomerReport')->name('report.getOrderCustomer');
+Route::get('/report/get-order','reportController@getOrderReport');
+Route::get('/report/get-order-customer','reportController@getOrderCustomerReport');
 
 //role
 Route::get('/add-role','settingController@addRole');
@@ -372,6 +377,7 @@ Route::get('/change-paint-lit','colorMasterController@changePaintLit');
 Route::get('/update-price_type','productController@updatePriceType');
 Route::get('/update-value_type','productController@updateValueType');
 Route::get('/update-amount','productController@updateAmount');
+Route::get('/update-length','productController@updateLength');
 
 });
 
@@ -423,12 +429,17 @@ Route::get('order-print/{id}', 'accountController@orderPrint');
 
 //deals
 Route::get('deals','accountController@deals');
+
+//transport
+Route::get('/transport','accountController@orderTransport');
+
 });
-Route::post('/submit-company','accountController@submitCompany')->name('submit.company');
+Route::post('/submit-company','accountController@submitCompany');
 Route::get('/get-compare','pageController@compare');
 Route::get('/add-compare/{id}','pageController@addCompare');
 Route::get('/remove-compare/{id}','pageController@removeCompare');
 Route::get('/compare','pageController@viewCompare');
+Route::get('/compare-product/{id}','pageController@compareProduct');
 
 //Cart Management
 Route::get('/add-cart/{id}/{qty}','pageController@addToCart');
@@ -455,14 +466,7 @@ Route::get('/remove-cart/{id}', function ($id) {
     Cart::remove($id);
     Session::forget('coupon');
 });
-Route::get('/cart-update-value/{id}/{value}', function ($id,$value) {
-    Cart::update($id, array(
-        'quantity' => array(
-            'relative' => false,
-            'value' => $value
-  ),
-    ));
-});
+Route::get('/cart-update-value/{id}/{value}','cartController@cartUpdateValue');
 Route::get('/cart',function(){
     return view('cart');
 });

@@ -135,7 +135,7 @@ $(document).on('click','#orderAction', function(){
     });
     if(order_id.length > 0){
         $.ajax({
-            url:"{{ route('order.action')}}",
+            url:"/admin/order-action",
             method:"get",
             data:{id:order_id,status:orderStatus},
             success:function(data){

@@ -50,8 +50,27 @@
                                       </div>
                                     </div>
 
+                              <div class="form-group row">
+                                      <label class="col-md-3 label-control" for="Select tax_type">Tax Type</label>
+                                      <div class="col-md-9">
+                                        <select name="tax_type" id="tax_type" class="form-control">
+                                        <option value="" selected="" disabled="">Select The Tax Type </option>
+                                        <option value="in">Inclusive</option>
+                                        <option value="out">Exclusive</option>
 
-                                     <div class="form-group row">
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control"  for="projectinput1">TAX Percentage (%)</label>
+                                        <div class="col-md-9">
+                                        <input type="text" class="form-control" name="tax" id="tax">
+                                      </div>
+                                      </div>
+
+
+                              <div class="form-group row">
                                 <label class="col-md-3 label-control" for="projectinput1">Finishers</label>
                                 <div class="col-md-9">
                                   <input type="text" id="finishers" class="form-control" placeholder="Product Name"
